@@ -9,7 +9,9 @@ const blogs = Array.from(allBlogs);
 const staticRoutes = ["/", "/blog"];
 
 function withLocalePrefix(route: string, locale: string) {
-	if (locale === appConfig.i18n.defaultLocale) return route;
+	if (locale === appConfig.i18n.defaultLocale) {
+		return route;
+	}
 	return `/${locale}${route}`;
 }
 
@@ -49,7 +51,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
 	const seen = new Set<string>();
 	return sitemapList.filter((item) => {
-		if (!item.url || seen.has(item.url)) return false;
+		if (!item.url || seen.has(item.url)) {
+			return false;
+		}
 		seen.add(item.url);
 		return true;
 	});

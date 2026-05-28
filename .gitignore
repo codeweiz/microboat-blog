@@ -58,6 +58,7 @@ dist
 .dev.vars*
 !.dev.vars.example
 !.env*example
+!.env.production
 *.log
 
 .source

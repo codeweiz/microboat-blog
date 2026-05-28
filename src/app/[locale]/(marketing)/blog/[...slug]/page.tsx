@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { blogs as allBlogs } from "@/source";
 
 import "@/styles/docs-mdx.css";
+import { Giscus } from "@/components/blog/giscus";
 import { GoToTop } from "@/components/blog/go-to-top";
 import { DashboardTableOfContents } from "@/components/blog/toc";
 
@@ -64,6 +65,7 @@ export default async function BlogPage(props: BlogsPageProps) {
 	const isTocHidden = false;
 	const { slug } = await props.params;
 	const blog = (await getBlogsFromParams(slug)) as any;
+	const locale = await getLocale();
 
 	if (!blog) {
 		notFound();
@@ -90,6 +92,8 @@ export default async function BlogPage(props: BlogsPageProps) {
 				<div className="prose mx-auto">
 					<MDX components={components} />
 				</div>
+
+				<Giscus locale={locale} />
 			</div>
 			{!isTocHidden && (
 				<div className="hidden text-sm xl:block">

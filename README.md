@@ -4,7 +4,7 @@
 
 Personal blog on Next.js 16 + Cloudflare Workers. Forked & stripped from [nextdevkit-cloudflare-template](https://github.com/codeweiz/nextdevkit-cloudflare-template).
 
-🌐 Live: **https://micorboat-blog.microboatofficial.workers.dev**
+🌐 Live: **https://blog.micro-boat.com**
 
 Every push to `main` ships to Cloudflare Workers via GitHub Actions. Day-to-day, you write a post, commit, push — that's it.
 
@@ -14,6 +14,8 @@ Every push to `main` ships to Cloudflare Workers via GitHub Actions. Day-to-day,
 - **MDX** content via `fumadocs-mdx` (frontmatter-driven posts in `src/content/blog/`)
 - **Tailwind v4** + shadcn/ui + `next-themes` (light/dark)
 - **next-intl** for English / 简体中文
+- **Giscus** comments backed by GitHub Discussions
+- **RSS** feed at `/rss.xml`
 - **OpenNext** deploying to Cloudflare Workers
 
 ## Develop
@@ -74,5 +76,22 @@ pnpm deploy                    # build + deploy bypassing CI
 ## Configuration
 
 - Site identity: `src/config/index.ts` (`metadata.name`, `title`, `description`, …)
+- Production URL: `.env.production` (`NEXT_PUBLIC_APP_URL`)
 - Worker name / bindings: `wrangler.jsonc`
 - Locales: `src/config/index.ts` → `i18n.locales`, plus `messages/{en,zh}.json`
+- Comments: `src/components/blog/giscus.tsx` (repo, repoId, category, categoryId)
+
+## Comments (Giscus)
+
+Comments use [Giscus](https://giscus.app) on top of GitHub Discussions.
+
+If you fork this repo:
+
+1. **Enable Discussions** — `gh api -X PATCH repos/OWNER/REPO -f has_discussions=true`
+2. **Install the Giscus app** — https://github.com/apps/giscus (grant access to your repo)
+3. **Get IDs** for your repo + category:
+   ```bash
+   gh api repos/OWNER/REPO --jq .node_id
+   gh api graphql -f query='{ repository(owner:"OWNER", name:"REPO"){ discussionCategories(first:20){ nodes { id name } } } }'
+   ```
+4. **Update** `src/components/blog/giscus.tsx` with your `repo`, `repoId`, `category`, `categoryId`

@@ -27,7 +27,9 @@ function LocaleSwitcher() {
 	}
 
 	const handleLocaleChange = (newLocale: Locale) => {
-		if (newLocale === locale) return;
+		if (newLocale === locale) {
+			return;
+		}
 		startTransition(async () => {
 			try {
 				await switchLocale(newLocale, pathname);
