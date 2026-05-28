@@ -17,7 +17,11 @@ export const getMessagesForLocale = async (
 	const defaultLocaleMessages = await importLocale(
 		appConfig.i18n.defaultLocale,
 	);
-	return deepmerge(defaultLocaleMessages, localeMessages);
+	return deepmerge(defaultLocaleMessages, localeMessages, {
+		// Arrays in messages (e.g. home.stack) represent locale-specific
+		// content — the localized version must replace the default, not concat.
+		arrayMerge: (_target, source) => source,
+	});
 };
 
 export const getDefaultMessages = async (): Promise<Messages> => {
