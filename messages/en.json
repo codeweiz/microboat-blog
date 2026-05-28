@@ -1,17 +1,28 @@
 {
 	"app": {
+		"name": "Microboat",
+		"tagline": "Field notes from building full-stack — backend, frontend, infra, and the tools in between.",
 		"metadata": {
 			"title": "Microboat — Personal Blog",
-			"description": "Notes on engineering, tools, and the work I'm shipping."
+			"description": "Field notes from building full-stack — backend, frontend, infra, and the tools in between."
 		}
 	},
 	"home": {
-		"badge": "Personal blog",
+		"badge": "Personal blog · full-stack",
 		"title": "Build small, ship often.",
-		"intro": "Notes on engineering, tools, and the work I'm shipping. Mostly Next.js, TypeScript, and Cloudflare.",
+		"intro": "Field notes from building full-stack — backend, frontend, infra, and the tools in between. Open-source-curious, type-safe by default.",
 		"cta": "Read the blog",
 		"latest": "Latest posts",
-		"viewAll": "View all"
+		"viewAll": "View all",
+		"stack": [
+			"backend",
+			"frontend",
+			"infra",
+			"data",
+			"ai",
+			"design systems",
+			"devtools"
+		]
 	},
 	"navigation": {
 		"home": "Home",
@@ -20,7 +31,7 @@
 	"blog": {
 		"title": "Blog",
 		"description": "Long-form notes on what I'm building and learning.",
-		"keywords": "blog, engineering, next.js, cloudflare"
+		"keywords": "blog, engineering, full-stack, infra, devtools"
 	},
 	"footer": {
 		"links": {

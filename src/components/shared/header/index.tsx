@@ -1,9 +1,9 @@
 "use client";
 
 import { Menu, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import React from "react";
 import { Logo } from "@/components/icons/logo";
-import { appConfig } from "@/config";
 import { getNavItems } from "@/config/navigation";
 import { Link as I18nLink } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 export const Header = () => {
 	const [menuState, setMenuState] = React.useState(false);
 	const navItems = getNavItems();
+	const t = useTranslations("app");
 
 	return (
 		<header>
@@ -28,7 +29,7 @@ export const Header = () => {
 							className="flex items-center gap-2 font-extrabold text-xl"
 						>
 							<Logo />
-							{appConfig.metadata.name}
+							{t("name")}
 						</I18nLink>
 
 						<button

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { LocaleSwitcher } from "@/components/shared/footer/locale-switcher";
 import { SocialButton } from "@/components/shared/footer/social-button";
 import { ThemeSwitcher } from "@/components/shared/footer/theme-switcher";
@@ -8,18 +9,15 @@ import { getFooterData } from "@/config/footer";
 
 function Footer() {
 	const footerData = getFooterData();
+	const t = useTranslations("app");
 
 	return (
 		<footer className="border-t bg-muted/30">
 			<div className="container mx-auto max-w-5xl px-6 py-12">
 				<div className="grid gap-10 md:grid-cols-3">
 					<div>
-						<h3 className="mb-3 text-base font-semibold">
-							{appConfig.metadata.name}
-						</h3>
-						<p className="text-sm text-muted-foreground">
-							{appConfig.metadata.description}
-						</p>
+						<h3 className="mb-3 text-base font-semibold">{t("name")}</h3>
+						<p className="text-sm text-muted-foreground">{t("tagline")}</p>
 					</div>
 					<div>
 						<h3 className="mb-3 text-base font-semibold">

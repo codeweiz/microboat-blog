@@ -10,6 +10,7 @@ const blogs = Array.from(allBlogs);
 export default async function Home() {
 	const locale = (await getLocale()) as Locale;
 	const t = await getTranslations("home");
+	const stack = t.raw("stack") as string[];
 
 	const latestPosts = blogs
 		.filter((post: any) => post.locale === locale)
@@ -19,26 +20,39 @@ export default async function Home() {
 	return (
 		<>
 			<section className="relative overflow-hidden pt-36 pb-24 px-6">
+				{/* grid */}
 				<div
 					aria-hidden
-					className="pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_70%)]"
+					className="pointer-events-none absolute inset-0 -z-20 [mask-image:radial-gradient(ellipse_at_top,black_25%,transparent_70%)]"
 				>
-					<div className="absolute inset-0 bg-[linear-gradient(to_right,oklch(0.92_0_0/.5)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.92_0_0/.5)_1px,transparent_1px)] bg-[size:48px_48px] dark:bg-[linear-gradient(to_right,oklch(0.3_0_0/.4)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.3_0_0/.4)_1px,transparent_1px)]" />
+					<div className="absolute inset-0 bg-[linear-gradient(to_right,oklch(0.88_0_0/.45)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.88_0_0/.45)_1px,transparent_1px)] bg-[size:48px_48px] dark:bg-[linear-gradient(to_right,oklch(0.3_0_0/.4)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.3_0_0/.4)_1px,transparent_1px)]" />
 				</div>
+
+				{/* drifting mesh orbs */}
 				<div
 					aria-hidden
-					className="pointer-events-none absolute left-1/2 top-20 -z-10 h-[480px] w-[680px] -translate-x-1/2 rounded-full bg-gradient-to-br from-indigo-400/30 via-fuchsia-400/20 to-cyan-400/30 blur-3xl dark:from-indigo-500/20 dark:via-fuchsia-500/15 dark:to-cyan-500/20"
+					className="animate-blob-drift pointer-events-none absolute -left-32 -top-24 -z-10 h-[480px] w-[480px] rounded-full bg-gradient-to-br from-indigo-400/40 via-violet-400/25 to-transparent blur-3xl dark:from-indigo-500/30 dark:via-violet-500/20"
+				/>
+				<div
+					aria-hidden
+					className="animate-blob-drift pointer-events-none absolute -right-32 top-40 -z-10 h-[420px] w-[420px] rounded-full bg-gradient-to-br from-cyan-400/35 via-emerald-400/20 to-transparent blur-3xl dark:from-cyan-500/25 dark:via-emerald-500/15"
+					style={{ animationDelay: "-7s" }}
 				/>
 
 				<div className="mx-auto max-w-3xl text-center">
 					<span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/60 px-3 py-1 text-xs font-medium text-muted-foreground shadow-sm backdrop-blur">
-						<span className="size-1.5 rounded-full bg-emerald-500" />
+						<span className="relative flex size-1.5">
+							<span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-500 opacity-75" />
+							<span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
+						</span>
 						{t("badge")}
 					</span>
 
-					<h1 className="mt-6 text-4xl md:text-6xl font-bold tracking-tight">
-						<span className="bg-gradient-to-br from-foreground via-foreground to-muted-foreground bg-clip-text text-transparent">
-							{t("title")}
+					<h1 className="mt-6 text-5xl md:text-7xl font-bold tracking-tight leading-[1.05]">
+						<span className="text-foreground">{t("title").split(",")[0]},</span>
+						<br />
+						<span className="animate-shimmer-sweep bg-[linear-gradient(110deg,oklch(0.55_0.18_265),oklch(0.65_0.22_310),oklch(0.6_0.2_200),oklch(0.55_0.18_265))] bg-clip-text text-transparent">
+							{t("title").split(",")[1]?.trim()}
 						</span>
 					</h1>
 
@@ -46,11 +60,22 @@ export default async function Home() {
 						{t("intro")}
 					</p>
 
-					<div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-						<Button asChild size="lg">
+					<ul className="mx-auto mt-8 flex max-w-2xl flex-wrap items-center justify-center gap-2">
+						{stack.map((tag) => (
+							<li
+								key={tag}
+								className="rounded-full border border-border/60 bg-background/60 px-3 py-1 text-xs font-medium text-muted-foreground backdrop-blur"
+							>
+								{tag}
+							</li>
+						))}
+					</ul>
+
+					<div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+						<Button asChild size="lg" className="group">
 							<I18nLink href="/blog">
 								{t("cta")}
-								<ArrowRight className="ml-1 h-4 w-4" />
+								<ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
 							</I18nLink>
 						</Button>
 						<Button asChild size="lg" variant="outline">
