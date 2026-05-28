@@ -1,6 +1,10 @@
 # Microboat Blog
 
+[![Deploy](https://github.com/codeweiz/microboat-blog/actions/workflows/deploy.yml/badge.svg)](https://github.com/codeweiz/microboat-blog/actions/workflows/deploy.yml)
+
 Personal blog on Next.js 16 + Cloudflare Workers. Forked & stripped from [nextdevkit-cloudflare-template](https://github.com/codeweiz/nextdevkit-cloudflare-template).
+
+Every push to `main` ships to Cloudflare Workers via GitHub Actions. Day-to-day, you write a post, commit, push — that's it.
 
 ## Stack
 
@@ -26,39 +30,43 @@ Drop a Markdown file in `src/content/blog/`:
 
 Frontmatter schema lives in `source.config.ts`. Then commit & push — GitHub Actions deploys automatically.
 
-## Deploy
-
-### One-time setup
-
-1. **Create a Cloudflare API token** at https://dash.cloudflare.com/profile/api-tokens
-   - Use the **"Edit Cloudflare Workers"** template
-2. **Find your Account ID** in the Cloudflare dashboard (right sidebar of any Worker page)
-3. **Add two GitHub Actions secrets** at https://github.com/codeweiz/microboat-blog/settings/secrets/actions
-   - `CLOUDFLARE_API_TOKEN` — the token from step 1
-   - `CLOUDFLARE_ACCOUNT_ID` — the ID from step 2
-4. **First deploy** (creates the Worker on Cloudflare):
-   ```bash
-   pnpm wrangler login         # one-time browser auth
-   pnpm deploy                 # builds + deploys
-   ```
-   Or just push to `main` and let CI do it.
-
-### Day-to-day
+## Publish a post
 
 ```bash
-# write a post
+# write
 vim src/content/blog/my-new-post.mdx
 
-# ship it
+# ship
 git add . && git commit -m "blog: my new post"
-git push                       # → GitHub Actions → live in ~1–2 min
+git push
 ```
 
-### Local commands
+GitHub Actions runs `install → lint → opennext build → wrangler deploy`. Live in ~1–2 min. Watch progress at https://github.com/codeweiz/microboat-blog/actions.
+
+## Deploy pipeline
+
+Already configured on this repo:
+
+- **Workflow:** [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml) — runs on push to `main` and on manual dispatch
+- **Secrets** (set on the repo): `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`
+- **Worker name:** `micorboat-blog` (in `wrangler.jsonc`)
+
+### If you fork this repo
+
+1. **Create a Cloudflare API token** — https://dash.cloudflare.com/profile/api-tokens → "Edit Cloudflare Workers" template
+2. **Find your Account ID** — right sidebar of any Worker page in the Cloudflare dashboard
+3. **Add Actions secrets** — `Settings → Secrets and variables → Actions`:
+   - `CLOUDFLARE_API_TOKEN`
+   - `CLOUDFLARE_ACCOUNT_ID`
+4. **Update `wrangler.jsonc`** — change `name` to your own Worker name
+5. Push to `main` — CI takes it from there
+
+### Deploy from your laptop
 
 ```bash
-pnpm preview                   # preview the production worker bundle locally
-pnpm deploy                    # build + deploy from your laptop
+pnpm wrangler login            # one-time browser auth
+pnpm preview                   # preview the prod worker bundle locally
+pnpm deploy                    # build + deploy bypassing CI
 ```
 
 ## Configuration
