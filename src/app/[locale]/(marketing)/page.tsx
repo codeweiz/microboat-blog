@@ -1,0 +1,111 @@
+import { ArrowRight, Github } from "lucide-react";
+import type { Locale } from "next-intl";
+import { getLocale, getTranslations } from "next-intl/server";
+import { Button } from "@/components/ui/button";
+import { Link as I18nLink } from "@/i18n/navigation";
+import { blogs as allBlogs } from "@/source";
+
+const blogs = Array.from(allBlogs);
+
+export default async function Home() {
+	const locale = (await getLocale()) as Locale;
+	const t = await getTranslations("home");
+
+	const latestPosts = blogs
+		.filter((post: any) => post.locale === locale)
+		.sort((a: any, b: any) => b.createdAt.getTime() - a.createdAt.getTime())
+		.slice(0, 3);
+
+	return (
+		<>
+			<section className="relative overflow-hidden pt-36 pb-24 px-6">
+				<div
+					aria-hidden
+					className="pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_70%)]"
+				>
+					<div className="absolute inset-0 bg-[linear-gradient(to_right,oklch(0.92_0_0/.5)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.92_0_0/.5)_1px,transparent_1px)] bg-[size:48px_48px] dark:bg-[linear-gradient(to_right,oklch(0.3_0_0/.4)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.3_0_0/.4)_1px,transparent_1px)]" />
+				</div>
+				<div
+					aria-hidden
+					className="pointer-events-none absolute left-1/2 top-20 -z-10 h-[480px] w-[680px] -translate-x-1/2 rounded-full bg-gradient-to-br from-indigo-400/30 via-fuchsia-400/20 to-cyan-400/30 blur-3xl dark:from-indigo-500/20 dark:via-fuchsia-500/15 dark:to-cyan-500/20"
+				/>
+
+				<div className="mx-auto max-w-3xl text-center">
+					<span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/60 px-3 py-1 text-xs font-medium text-muted-foreground shadow-sm backdrop-blur">
+						<span className="size-1.5 rounded-full bg-emerald-500" />
+						{t("badge")}
+					</span>
+
+					<h1 className="mt-6 text-4xl md:text-6xl font-bold tracking-tight">
+						<span className="bg-gradient-to-br from-foreground via-foreground to-muted-foreground bg-clip-text text-transparent">
+							{t("title")}
+						</span>
+					</h1>
+
+					<p className="mx-auto mt-6 max-w-xl text-base md:text-lg text-muted-foreground">
+						{t("intro")}
+					</p>
+
+					<div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+						<Button asChild size="lg">
+							<I18nLink href="/blog">
+								{t("cta")}
+								<ArrowRight className="ml-1 h-4 w-4" />
+							</I18nLink>
+						</Button>
+						<Button asChild size="lg" variant="outline">
+							<a
+								href="https://github.com/codeweiz/microboat-blog"
+								target="_blank"
+								rel="noreferrer"
+							>
+								<Github className="mr-1 h-4 w-4" />
+								GitHub
+							</a>
+						</Button>
+					</div>
+				</div>
+			</section>
+
+			<section className="px-6 pb-24">
+				<div className="mx-auto max-w-3xl">
+					<div className="flex items-baseline justify-between border-b pb-3">
+						<h2 className="text-xl font-semibold">{t("latest")}</h2>
+						<I18nLink
+							href="/blog"
+							className="text-sm text-muted-foreground hover:text-foreground"
+						>
+							{t("viewAll")} →
+						</I18nLink>
+					</div>
+					<ul className="mt-2 divide-y">
+						{latestPosts.map((post: any) => (
+							<li key={post.slug}>
+								<I18nLink
+									href={`/blog/${post.slug}`}
+									className="group flex flex-col gap-1 py-6 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
+								>
+									<div className="min-w-0 flex-1">
+										<h3 className="truncate text-base font-medium group-hover:underline">
+											{post.title}
+										</h3>
+										<p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+											{post.description}
+										</p>
+									</div>
+									<time className="shrink-0 text-xs text-muted-foreground tabular-nums">
+										{post.createdAt.toLocaleDateString(locale, {
+											year: "numeric",
+											month: "short",
+											day: "numeric",
+										})}
+									</time>
+								</I18nLink>
+							</li>
+						))}
+					</ul>
+				</div>
+			</section>
+		</>
+	);
+}

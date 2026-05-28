@@ -1,0 +1,37 @@
+{
+	"app": {
+		"metadata": {
+			"title": "Microboat — Personal Blog",
+			"description": "Notes on engineering, tools, and the work I'm shipping."
+		}
+	},
+	"home": {
+		"badge": "Personal blog",
+		"title": "Build small, ship often.",
+		"intro": "Notes on engineering, tools, and the work I'm shipping. Mostly Next.js, TypeScript, and Cloudflare.",
+		"cta": "Read the blog",
+		"latest": "Latest posts",
+		"viewAll": "View all"
+	},
+	"navigation": {
+		"home": "Home",
+		"blog": "Blog"
+	},
+	"blog": {
+		"title": "Blog",
+		"description": "Long-form notes on what I'm building and learning.",
+		"keywords": "blog, engineering, next.js, cloudflare"
+	},
+	"footer": {
+		"links": {
+			"title": "Links",
+			"home": "Home",
+			"blog": "Blog",
+			"rss": "RSS"
+		},
+		"social": {
+			"title": "Social"
+		},
+		"copyright": "© 2026 Microboat. All rights reserved."
+	}
+}

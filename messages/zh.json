@@ -1,0 +1,37 @@
+{
+	"app": {
+		"metadata": {
+			"title": "Microboat — 个人博客",
+			"description": "工程、工具,以及我正在做的事的笔记。"
+		}
+	},
+	"home": {
+		"badge": "个人博客",
+		"title": "小处入手,持续输出。",
+		"intro": "工程、工具,以及我正在做的事的笔记。主要围绕 Next.js、TypeScript、Cloudflare。",
+		"cta": "阅读博客",
+		"latest": "最新文章",
+		"viewAll": "查看全部"
+	},
+	"navigation": {
+		"home": "首页",
+		"blog": "博客"
+	},
+	"blog": {
+		"title": "博客",
+		"description": "关于我在做什么、学到什么的长篇笔记。",
+		"keywords": "博客,工程,next.js,cloudflare"
+	},
+	"footer": {
+		"links": {
+			"title": "链接",
+			"home": "首页",
+			"blog": "博客",
+			"rss": "RSS"
+		},
+		"social": {
+			"title": "社交"
+		},
+		"copyright": "© 2026 Microboat. 保留所有权利。"
+	}
+}

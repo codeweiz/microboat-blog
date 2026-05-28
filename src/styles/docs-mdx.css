@@ -1,0 +1,6 @@
+@import "tailwindcss";
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
+
+/* If you want to cancel sidebar spacing on large screens, uncomment this - fumadocs v16 */
+/* :root { --fd-layout-width: 100vw; } */

@@ -1,0 +1,21 @@
+/**
+ * Wrangler config — minimal personal blog deployment on Cloudflare Workers via OpenNext.
+ * Docs: https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "micorboat-blog",
+	"main": ".open-next/worker.js",
+	"compatibility_date": "2025-03-01",
+	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+	"minify": true,
+	"assets": {
+		"binding": "ASSETS",
+		"directory": ".open-next/assets"
+	},
+	"observability": {
+		"enabled": true
+	},
+	"placement": { "mode": "smart" },
+	"vars": {}
+}
