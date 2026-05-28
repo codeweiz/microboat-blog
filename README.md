@@ -4,6 +4,8 @@
 
 Personal blog on Next.js 16 + Cloudflare Workers. Forked & stripped from [nextdevkit-cloudflare-template](https://github.com/codeweiz/nextdevkit-cloudflare-template).
 
+🌐 Live: **https://micorboat-blog.microboatofficial.workers.dev**
+
 Every push to `main` ships to Cloudflare Workers via GitHub Actions. Day-to-day, you write a post, commit, push — that's it.
 
 ## Stack
