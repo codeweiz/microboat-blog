@@ -4,14 +4,18 @@ import Link from "next/link";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-const ImageWrapper = ({ src, alt }: { src: string; alt: string }) => {
+type ImageWrapperSrc = string | { src: string };
+
+const ImageWrapper = ({ src, alt }: { src: ImageWrapperSrc; alt?: string }) => {
 	if (!src) {
 		return null;
 	}
 
+	const resolvedSrc = typeof src === "string" ? src : src.src;
+
 	return (
 		<ImageZoom
-			src={src}
+			src={resolvedSrc}
 			alt={alt || "image"}
 			width={960}
 			height={540}

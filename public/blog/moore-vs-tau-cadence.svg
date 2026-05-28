@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img" aria-labelledby="title desc">
+  <title id="title">Moore's Law versus Tau Scaling Cadence</title>
+  <desc id="desc">Two log-scale plots comparing Moore's 1965 component prediction with 2026 tau scaling reduction factors.</desc>
+  <defs>
+    <style>
+      .label{font-family:Inter,system-ui,sans-serif;fill:#E0F2FE;font-size:13px}
+      .small{font-family:Inter,system-ui,sans-serif;fill:#CBD5E1;font-size:12px}
+      .title{font-family:Inter,system-ui,sans-serif;fill:#FFFFFF;font-weight:700}
+      .grid{stroke:#334155;stroke-width:1;opacity:.85}
+      .axis{stroke:#94A3B8;stroke-width:1.2}
+    </style>
+    <clipPath id="leftClip"><rect x="80" y="122" width="460" height="330"/></clipPath>
+    <clipPath id="rightClip"><rect x="660" y="122" width="460" height="330"/></clipPath>
+  </defs>
+
+  <rect width="1200" height="600" fill="#0F172A"/>
+  <text x="600" y="55" class="title" font-size="30" text-anchor="middle">Moore's Law (1965) vs. Tau Scaling (2026)</text>
+  <text x="310" y="96" class="title" font-size="19" text-anchor="middle">Moore's Prediction (1965)</text>
+  <text x="890" y="96" class="title" font-size="19" text-anchor="middle">Tau Scaling (2026)</text>
+
+  <g id="left-plot">
+    <rect x="80" y="122" width="460" height="330" fill="#0F172A" stroke="#0EA5E9" stroke-opacity=".40"/>
+    <line x1="80" y1="452" x2="540" y2="452" class="axis"/>
+    <line x1="80" y1="122" x2="80" y2="452" class="axis"/>
+    <g class="grid">
+      <line x1="80" y1="452" x2="540" y2="452"/>
+      <line x1="80" y1="369.5" x2="540" y2="369.5"/>
+      <line x1="80" y1="287" x2="540" y2="287"/>
+      <line x1="80" y1="204.5" x2="540" y2="204.5"/>
+      <line x1="80" y1="122" x2="540" y2="122"/>
+      <line x1="80" y1="122" x2="80" y2="452"/>
+      <line x1="195" y1="122" x2="195" y2="452"/>
+      <line x1="310" y1="122" x2="310" y2="452"/>
+      <line x1="425" y1="122" x2="425" y2="452"/>
+      <line x1="540" y1="122" x2="540" y2="452"/>
+    </g>
+    <g class="small" text-anchor="end">
+      <text x="70" y="456">10</text>
+      <text x="70" y="373.5">100</text>
+      <text x="70" y="291">1k</text>
+      <text x="70" y="208.5">10k</text>
+      <text x="70" y="126">100k</text>
+    </g>
+    <g class="small" text-anchor="middle">
+      <text x="80" y="476">1965</text>
+      <text x="195" y="476">1967.5</text>
+      <text x="310" y="476">1970</text>
+      <text x="425" y="476">1972.5</text>
+      <text x="540" y="476">1975</text>
+      <text x="310" y="516">year</text>
+    </g>
+    <text transform="translate(30 287) rotate(-90)" class="label" text-anchor="middle">components per chip</text>
+    <g clip-path="url(#leftClip)">
+      <path d="M80 387.8 C126 362.9 172 338 218 313.1 C264 288.2 310 263.3 356 238.5 C402 213.6 448 188.7 494 163.8 C512.4 153.9 530.8 143.9 540 139" fill="none" stroke="#0EA5E9" stroke-width="4"/>
+    </g>
+    <text x="176" y="154" class="label">N(t) = N0 · 2^(t/T), T ~= 1 year</text>
+    <circle cx="568" cy="168.1" r="5" fill="#67E8F9" stroke="#FFFFFF" stroke-width="1"/>
+    <line x1="540" y1="168.1" x2="568" y2="168.1" stroke="#67E8F9" stroke-dasharray="4 5" opacity=".35"/>
+    <text x="430" y="188" class="small">Intel 8086, 1978, ~29k</text>
+  </g>
+
+  <g id="right-plot">
+    <rect x="660" y="122" width="460" height="330" fill="#0F172A" stroke="#0EA5E9" stroke-opacity=".40"/>
+    <line x1="660" y1="452" x2="1120" y2="452" class="axis"/>
+    <line x1="660" y1="122" x2="660" y2="452" class="axis"/>
+    <g class="grid">
+      <line x1="660" y1="122" x2="1120" y2="122"/>
+      <line x1="660" y1="232" x2="1120" y2="232"/>
+      <line x1="660" y1="342" x2="1120" y2="342"/>
+      <line x1="660" y1="452" x2="1120" y2="452"/>
+      <line x1="660" y1="122" x2="660" y2="452"/>
+      <line x1="775" y1="122" x2="775" y2="452"/>
+      <line x1="890" y1="122" x2="890" y2="452"/>
+      <line x1="1005" y1="122" x2="1005" y2="452"/>
+      <line x1="1120" y1="122" x2="1120" y2="452"/>
+    </g>
+    <g class="small" text-anchor="end">
+      <text x="650" y="126">1000</text>
+      <text x="650" y="236">100</text>
+      <text x="650" y="346">10</text>
+      <text x="650" y="456">1</text>
+    </g>
+    <g class="small" text-anchor="middle">
+      <text x="660" y="476">2026</text>
+      <text x="775" y="476">2028.5</text>
+      <text x="890" y="476">2031</text>
+      <text x="1005" y="476">2033.5</text>
+      <text x="1120" y="476">2036</text>
+      <text x="890" y="516">year</text>
+    </g>
+    <text transform="translate(610 287) rotate(-90)" class="label" text-anchor="middle">tau reduction factor</text>
+    <g clip-path="url(#rightClip)">
+      <path d="M660 452 C752 439.5 844 427 936 414.5 C1028 402 1083.2 394.5 1120 389.5" fill="none" stroke="#67E8F9" stroke-width="4"/>
+      <path d="M660 452 C752 432.6 844 413.2 936 393.8 C1028 374.3 1083.2 362.7 1120 354.9" fill="none" stroke="#0EA5E9" stroke-width="4"/>
+      <path d="M660 452 C752 342 844 232 936 122 C1000 49 1063 -24 1120 -85" fill="none" stroke="#F59E0B" stroke-width="4"/>
+    </g>
+    <text x="718" y="154" class="label">tau(t) = tau0 / alpha^t, alpha depends on application</text>
+    <g class="small">
+      <line x1="800" y1="392" x2="835" y2="392" stroke="#67E8F9" stroke-width="4"/>
+      <text x="845" y="396">Mobile, alpha=1.3x/year</text>
+      <line x1="800" y1="416" x2="835" y2="416" stroke="#0EA5E9" stroke-width="4"/>
+      <text x="845" y="420">Autonomous driving, alpha=1.5x/year</text>
+      <line x1="800" y1="440" x2="835" y2="440" stroke="#F59E0B" stroke-width="4"/>
+      <text x="845" y="444">AI workload, alpha=10x/year</text>
+    </g>
+  </g>
+</svg>
