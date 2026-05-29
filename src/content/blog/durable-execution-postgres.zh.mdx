@@ -1,0 +1,181 @@
+---
+title: "持久化执行，以及一个 Postgres 是不是真的够了"
+description: "DBOS 主张一个 Postgres 就能取代 Temporal、Restate、Step Functions 来做持久化执行。把每个系统的机制读一遍，会看到这个说法在哪里恰好成立、又在哪里悄悄略过了东西。"
+keywords: "durable execution, 持久化执行, DBOS, Temporal, Restate, Postgres, 工作流引擎, 事件溯源, 确定性重放, checkpoint, Cadence, Step Functions"
+createdAt: 2026-05-29T22:00:00+08:00
+updatedAt: 2026-05-29T22:00:00+08:00
+tags: ["distributed-systems", "databases", "durable-execution", "notes"]
+author: Microboat
+image: "/blog/durable-execution-hero.zh.svg"
+---
+
+<Callout title="AI 摘要">
+
+- <strong>持久化执行</strong>让程序崩溃后能从停下的地方继续，每一步实际上只执行一次。所有引擎的内核都一样：在用到一步的结果之前，先把它写进持久日志；重启时重放已完成的步骤，而不是重做。
+- 各家的分歧在于<strong>存什么</strong>。重放派，也就是 Temporal、Cadence、Azure Durable Functions，存一份事件历史，用确定性代码去重放它，单条工作流封顶在 51,200 个事件。checkpoint 派，也就是 DBOS，把每一步存成两张 Postgres 表里的一行、重放时直接替换，单库每秒能撑四万步以上。
+- <strong>「一个 Postgres 就够了」成立处：</strong>因为 checkpoint 就活在你自己的 Postgres 里，一步的输出和它的业务写能在同一个事务里提交；外部编排器把这件事拆到两个系统，逼你在每个边界上都串幂等键。
+- <strong>这个说法略过处：</strong>单主库是一道纵向天花板；而 Restate 自己造了复制日志，因为通用存储在按消息计的延迟下不够快。这些正是把 Temporal 逼去分片、把 Restate 逼去写日志的情形。
+- <strong>结论：</strong>无论哪一派，持久化执行骨子里都是个数据库问题。真正要选的，只是通用数据库还是专用数据库；而一个负载的写吞吐、历史长度、每步延迟，决定了答案。
+
+</Callout>
+
+过去十年里，有几样后端基础设施是认真做出来的：Temporal、Restate、AWS Step Functions。它们解决的是同一个问题，让一个程序在崩溃之后，不丢失自己跑到了哪一步。
+
+这周 Hacker News 头版有一篇博客，来自 DBOS。它的主张很冲：上面这几样东西，大多数时候根本不需要。文章标题就把话说死了，《Postgres Is All You Need for Durable Execution》，做持久化执行，一个 Postgres 数据库就够了。
+
+这句"一个 Postgres 就够了"，就是下面要逐条检验的口号。
+
+"durable execution" 这个词听起来简单，底下的机制其实不少。所以这句口号值得按字面核一遍：把它拿去跟想替掉的那几个系统，Temporal、Restate、Step Functions，挨个对一对。
+
+这么读下来会发现：它确实成立，但理由比口号喊得更窄；而它略过的那些边界，正好能从 Temporal 和 Restate 身上看清楚。
+
+## 什么是持久化执行
+
+这个想法比这个词更早。
+
+Maxim Fateev 在 Amazon 做过 Simple Workflow Service，Samar Abbas 在微软做过 Azure Durable Functions 背后的 Durable Task Framework。两人 2015 年在 Uber 重聚，一起写了开源工作流引擎 Cadence；之后离开 Uber，2019 年创办 Temporal，并给这一类东西起了个名字：durable execution。
+
+这条脉络值得一提，是因为底下的机制，在大约二十年里几乎没变过。
+
+每一个持久化执行引擎，内核都是同一个。程序被写成一串步骤，任何一步的结果在被用到之前，先写进一份持久化的日志。一旦进程崩溃，引擎就重启这个程序：凡是日志上已经记过的步骤，直接把记下来的结果还回去，而不是重跑一遍，直到执行追上崩溃前停下的位置，再继续往前。
+
+Restate 把这个循环说得很干净：
+
+> Every meaningful step (an external API call, a database write, a sleep, a message sent to another service) is recorded to a persistent log before its result is returned to the function. If the process crashes, the engine restarts the function and replays the journal: each previously-completed step returns its recorded result instantly, until execution catches up to the point of failure and continues from there.
+
+中文转述：每一个有意义的步骤，比如一次外部 API 调用、一次数据库写、一次 sleep、发给别的服务的一条消息，在把结果交还给函数之前，先记进持久化日志。进程崩了，引擎重启函数、重放这份日志：每个已完成的步骤瞬间把记录的结果还回来，直到追上失败点，再从那里往下走。
+
+系统与系统之间的分歧很窄，但很要命：到底把什么写下来，又由谁来写。
+
+## 重放派：记录代码的历史
+
+Temporal、它之前的 Cadence、还有 Azure Durable Functions，都是存一份事件历史，靠重放它来重建状态。
+
+这份历史，就是一个工作流的权威记录。它不是内存的快照，而是发生在这个工作流身上的每一件事，按先后顺序排成的一张清单。Temporal 自己对"恢复"的描述，毫不含糊：
+
+> Temporal doesn't restore memory from a snapshot. It starts the Workflow code from the beginning, replays the Event History step by step.
+
+从头重跑一遍代码，只有在代码"确定"的前提下，才会再次走到同一个地方。所以 Temporal 把工作流代码里那些明显的非确定性来源全禁掉了：墙上时钟要从工作流上下文里读，好跟记录下来的历史对得上；随机数只在第一次取、之后复用；任何要碰外部世界的动作，都得塞进一个叫 activity 的东西里：
+
+> When a Workflow calls an Activity, the Activity runs once, its result is recorded in the Event History. During replay, that result is reused, not recomputed.
+
+这个设计带出两个后果。
+
+第一个后果是：一条工作流的全部持久化状态，就是它那份事件历史。这等于说，引擎本身在功能上就是一个"专门存历史的数据库"。
+
+Temporal Server 拆成四个能各自扩展的服务，Frontend、History、Matching、Worker，底下垫着一个可换的持久化层，可以是 Cassandra、MySQL 或 Postgres。History 服务把一条条执行历史分片存进去，Matching 负责把任务派给那些在轮询任务队列的 worker。这是一台为工作流语义专门造的分布式数据库，不是随手套在队列外面的一层壳。
+
+第二个后果，是一道硬上限。
+
+恢复一条工作流，意味着要把它的整段历史重放一遍，所以恢复的代价会随历史变长而变大。Temporal 干脆给它封了顶：一条工作流的历史一旦超过 <strong>51,200 个事件或 50 MB</strong>，就会被直接终止，到 10,240 个事件或 10 MB 时先报警告。
+
+想跑得更久，工作流就得调用 Continue-As-New：它会原子地关掉当前这条执行，再用一个新的 run ID 和一段空历史，开一条新的接着跑。这道上限的来由，正是重放本身：一个 worker 接手一条它不认识的工作流，得先把历史整段重放完，才能往下走。
+
+![图一. 让程序持久化的两条路。崩溃后两边都从头重跑代码；重放派喂回一段记录下来的事件流，checkpoint 派则按每个已完成步骤读回一行存好的记录。](/blog/durable-execution-two-models.zh.svg)
+
+## checkpoint 派：存每一步的输出
+
+这句口号背后的那个库，叫 DBOS Transact，它走的是完全相反的一条路。
+
+它不是一个你部署在应用旁边的服务，而是一个直接跑在你应用进程里的库。持久化状态就活在你自己的 Postgres 里，路径上没有任何编排器：
+
+> Application servers directly communicate with Postgres to execute workflows instead of going through a central orchestrator.
+
+核心的恢复路径，归结到两张 Postgres 表。
+
+`workflow_status` 每个工作流一行，主键是 `workflow_uuid`，存它的状态、最终输出和错误。`operation_outputs` 每个已完成的步骤一行，主键是 `(workflow_uuid, function_id)` 这个组合，存的就是这一步的输出。
+
+于是"恢复"就变成了一次按步骤号的查表：
+
+> DBOS restarts each interrupted workflow by calling it with its checkpointed inputs. As the workflow re-executes, it checks before each step if that step's output is checkpointed in Postgres. If there is a checkpoint, the step returns the checkpointed output instead of executing.
+
+checkpoint 层面的"恰好一次"，不靠任何额外的协调协议，而是直接从 Postgres 的约束里掉出来的。两个 worker 同时来恢复同一条工作流，都想写同一行 `(workflow_uuid, function_id)`，主键一撞，一个写成功，另一个就退避。DBOS 自己就是这么说的："Postgres database integrity constraints let them detect the duplicate work on checkpoint and back off."
+
+队列也是一样的套路：任务用行锁出队，也就是 `SELECT … FOR UPDATE SKIP LOCKED`，保证每个入队的任务只被一个 worker 领走。
+
+在单个数据库上，DBOS 报告能稳定撑住 <strong>每秒四万以上的工作流或步骤</strong>，这也是它"每天四十亿个工作流"那个头条数字的来路。
+
+![图二. DBOS 的恢复是一次对 operation_outputs 的逐步查表。checkpoint 命中就返回存好的输出、跳过副作用；未命中就执行这一步并写入它那一行。](/blog/dbos-recovery-loop.zh.svg)
+
+把两边并排摆开，差别其实很精确。
+
+崩溃之后，两个系统都从头重跑工作流代码。重放派靠的是把一段记录好的事件流，重新喂回代码里去重建状态；checkpoint 派靠的是按每个完成的步骤，读回一行存好的记录。一句话：Temporal 存的是<strong>发生了什么</strong>，DBOS 存的是<strong>每一步返回了什么</strong>。
+
+## 这口号在哪里恰好成立
+
+DBOS 这套论证里最强的一点，恰恰是大多数对比都漏掉的。它是把 checkpoint 放进"和你业务数据同一个库"之后，自然长出来的结果。
+
+举个例子：有一步，要往你应用的 `payments` 表里写一行，记下一笔刚完成的扣款。
+
+在 DBOS 里，写 `payments` 这一下，和把 checkpoint 写进 `operation_outputs` 这一下，是对同一个 Postgres 的两次写，所以它们能在同一个事务里一起提交。这两次写要么都落地，要么都不落地。不会出现"那一行已经在了、可系统忘了这步跑过"，也不会出现"系统标记这步做完了、可那一行根本不在"。
+
+外部编排器给不了这种横跨两边的同一个事务。
+
+Temporal 的历史活在 Temporal 自己的存储里，你的 `payments` 行活在你的数据库里。一个 activity 先写那一行、再回头向 Temporal 报告"我做完了"，这本身就是对两个系统的两次写，中间隔着一道缝。而崩在这道缝里，正是持久化执行这整件事要解决的问题。
+
+标准的补救办法，是给每个 activity 串一个幂等键，让重试的时候，activity 能认出"这事我先前已经干过了"，于是跳过。这办法能用，但它是你要在每一个边界上自己写、自己维护的一摊簿记。
+
+而对于"工作流的副作用，本来就是写它要 checkpoint 进去的那个库"这种最常见的情形，库内方案把这一整摊簿记都省掉了。可观测性也顺手白送：想看实时或历史的工作流状态，对你自己的表 `SELECT` 一下就行，不用再去调别人系统的 API。
+
+这才是 "all you need" 最有分量的地方：只有库内引擎，才能把业务写和 checkpoint 写塞进同一个事务。
+
+## 这口号又在哪里略过了东西
+
+这句口号下面压着两道天花板。而这两道，恰好都能从它想替掉的那些系统身上看出来。
+
+第一道，是单写入者的扩展上限。
+
+一个 Postgres 上每秒四万步以上，是个很漂亮的数字，但扛下每一次 checkpoint 写的，终究是一个写主库。只读副本不接写；而那条队列，本质是一群 worker 在用行锁轮询同一张表，这是推送式派发能省掉的一份持续开销。
+
+想把持久化执行扩到单个数据库之外，就意味着要给你应用底下的数据库分片，而且是在你自己的业务数据上分片，最难的那一种。Temporal 是故意做了相反的取舍：它把 History 服务横向铺在一个 Cassandra 集群上，代价就是前面那个 51,200 事件的上限和 Continue-As-New。两道天花板都不免费，你先撞上哪一道，取决于你的负载长什么样。
+
+第二道，是延迟下限，而 Restate 就是这里干干净净的反例。
+
+Restate 是一个单独的 Rust 二进制，作为代理挡在你的服务前面。它的作者没有去复用现成的日志或数据库，而是自己写了一个复制日志，叫 Bifrost，理由很直接，现成的东西没一个够快：
+
+> They built their own implementation of a distributed replicated log because they didn't find any of the existing logs suitable in terms of latency (single roundtrip, quorum replication with external consensus).
+
+每一步都同步往 Postgres 写一次，在面向人、或者面向服务编排那种延迟尺度下，根本不算事。可一旦"一步"变成热路径上按每条消息计的操作，它就是一笔实打实的开销。
+
+那个为"低延迟持久化执行"优化得最狠的厂商，最后判定通用存储并不是 all you need，转头造了个专用的。这个决定本身，就是关于边界到底画在哪儿的最好证据。
+
+## 两派都在造数据库
+
+往后退一步看，这两条路其实在从相反的方向，朝同一个事实收敛。
+
+Temporal 从工作流编排出发，最后造出来的，是一台专门为执行历史服务的、分片的数据库，带着自己的容量上限、垃圾回收和可换的存储引擎。DBOS 从数据库研究出发，干脆把持久化执行，直接指向了一个本来就存在的数据库。
+
+DBOS 这个项目立项时的论点，比"工作流"大得多。它写在 2022 年那篇 VLDB 论文里：
+
+> a distributed transactional DBMS should be the basis for a scalable cluster OS.
+
+如果连一整个操作系统都该坐在一个事务型数据库之上，那一个工作流引擎坐上去，只是其中最不起眼的情形。持久化执行，不过是这个大论点里最容易先出货的那一片。
+
+而把它出货出来的这家公司，背后站着创造了 Postgres 的 Michael Stonebraker，和创造了 Spark 的 Matei Zaharia。他们卖的其实就是这么一个判断：他们花了大半辈子做的那个数据库，一直就是那个缺位已久的编排器。
+
+所以更诚实的说法，不是"Postgres 对决工作流引擎"，而是"通用数据库对决专用数据库"。两边干的是同一件活，因为持久化执行，骨子里就是个数据库问题。Temporal 看上去那一身复杂，大半是它亲手造了那台专用执行数据库的代价；而 DBOS 把这件事，整个外包给了 Postgres。
+
+## 那么，一个 Postgres 到底够不够
+
+对一大类后端来说，够。
+
+说具体点，就是那些数据本来就在 Postgres 里、跑的速率一个主库就扛得住、每一步的延迟还停在"工作流"尺度而不是"按消息"尺度上的后端。对它们来说，那个单事务的耦合，让 Postgres 不只是"够用"，而是比外部编排器更好的选择。
+
+它盖不住的，恰恰是那些把 Temporal 逼去分片、把 Restate 逼去写日志的情形：极高的 fan-out、单条工作流拖着极长的历史、以及一道比"每步同步写一次"还要低的延迟下限。
+
+所以结论是窄的。
+
+无论你站哪一派，持久化执行骨子里都是个数据库问题；真正要选的，只是这个数据库是通用的、还是专用的。对一个数据本就在 Postgres、又跑在单主库写入上限以下的后端，答案是够，而那个单事务让它成为更好的那个答案。一旦越过这道上限，口号就不再成立，而答案恰恰就在它当初挥手赶走的那几个系统里：Temporal 的分片历史库，Restate 的专用日志。
+
+---
+
+## 参考文献
+
+1. DBOS. *Postgres Is All You Need for Durable Execution*. DBOS blog, 2026. [链接](https://www.dbos.dev/blog/postgres-is-all-you-need-for-durable-execution)
+2. DBOS. *Durable Execution Architecture*. DBOS 文档. [链接](https://docs.dbos.dev/architecture)
+3. Skiadopoulos, A., et al. *DBOS: A DBMS-oriented Operating System*. Proceedings of the VLDB Endowment, Vol. 15, No. 1, 2021, pp. 21–30. [PDF](https://vldb.org/pvldb/vol15/p21-skiadopoulos.pdf)
+4. Cafarella, M., et al. *A Progress Report on DBOS: A Database-oriented Operating System*. CIDR 2022. [PDF](https://people.eecs.berkeley.edu/~matei/papers/2022/cidr_dbos.pdf)
+5. Temporal. *Workflows* 与 *Temporal Server* 文档. [链接](https://docs.temporal.io/workflows)
+6. Temporal. *Workflow Execution limits*. Temporal Platform 文档. [链接](https://docs.temporal.io/workflow-execution/limits)
+7. Restate. *What is Durable Execution?* 与 *Building a modern Durable Execution Engine from First Principles*. [链接](https://www.restate.dev/what-is-durable-execution)
+8. Temporal. *A journey: Durable Task Framework, Uber, & open source magic*. [链接](https://temporal.io/blog/samars-journey)

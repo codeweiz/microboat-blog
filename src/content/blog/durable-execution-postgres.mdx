@@ -1,0 +1,175 @@
+---
+title: "Durable execution, and whether Postgres is all you need"
+description: "DBOS argues a single Postgres replaces Temporal, Restate, and Step Functions for durable execution. Reading the mechanism of each system shows where that claim is exactly right and where it quietly isn't."
+keywords: "durable execution, DBOS, Temporal, Restate, Postgres, workflow engine, event sourcing, deterministic replay, checkpointing, Cadence, Step Functions"
+createdAt: 2026-05-29T22:00:00+08:00
+updatedAt: 2026-05-29T22:00:00+08:00
+tags: ["distributed-systems", "databases", "durable-execution", "notes"]
+author: Microboat
+image: "/blog/durable-execution-hero.svg"
+---
+
+<Callout title="AI summary">
+
+- **Durable execution** lets a program survive a crash and resume where it stopped, with each step run effectively once. Every engine shares one core: write a step to a durable log before using its result, and on restart replay the completed steps instead of redoing them.
+- The systems split on **what they store**. The replay camp, Temporal and Cadence and Azure Durable Functions, stores an event history and re-runs deterministic code against it, capped at 51,200 events per workflow. The checkpoint camp, DBOS, stores one row per step in two Postgres tables and substitutes it on replay, sustaining more than 40,000 steps per second on a single database.
+- **Where "Postgres is all you need" holds:** because the checkpoint lives in your own Postgres, a step's database write and its checkpoint commit in one transaction. An external orchestrator splits that across two systems and forces idempotency keys at every boundary.
+- **Where that claim elides something:** one primary is a vertical ceiling, and Restate built its own replicated log because a general store was not fast enough at per-message latency. Those are the cases that pushed Temporal to shard and Restate to write a log.
+- **Verdict:** durable execution is a database problem either way. The only choice is a general database or a special one, and a workload's write rate, history length, and per-step latency decide it.
+
+</Callout>
+
+Three serious pieces of backend infrastructure came out of the last decade: Temporal, Restate, and AWS Step Functions. They solve the same problem, which is letting a program survive a crash without losing track of where it was.
+
+This week a post from DBOS reached the Hacker News front page with a blunt claim: most of the time, you need none of them. Its title says it outright, *Postgres Is All You Need for Durable Execution*.
+
+That sentence, "Postgres is all you need," is the slogan this post sets out to test. The phrase "durable execution" hides far more mechanism than it lets on, so the claim is worth taking literally and holding up against the systems it waves away.
+
+Read that way, the claim is partly right: right for a narrower reason than DBOS advertises, and incomplete for limits that Temporal and Restate make visible.
+
+## What durable execution means
+
+The idea is older than the phrase.
+
+Maxim Fateev built Amazon's Simple Workflow Service, and Samar Abbas built the Durable Task Framework behind Azure Durable Functions. They reunited at Uber in 2015 to write Cadence, an open-source workflow engine, then left to found Temporal in 2019, where they named the category *durable execution*.
+
+The lineage is worth a mention because the mechanism underneath has been stable across all of it for roughly two decades.
+
+Every durable execution engine shares one core. A program is written as a sequence of steps. Before any step's result is used, it is written to a durable log. If the process crashes, the engine restarts the program and, for every step already on the log, hands back the recorded result instead of running it again, until execution catches up to where it stopped and continues forward.
+
+Restate states the loop cleanly:
+
+> Every meaningful step (an external API call, a database write, a sleep, a message sent to another service) is recorded to a persistent log before its result is returned to the function. If the process crashes, the engine restarts the function and replays the journal: each previously-completed step returns its recorded result instantly, until execution catches up to the point of failure and continues from there.
+
+The disagreement between systems is narrow but consequential. It is about what gets written down, and who writes it.
+
+## The replay camp: record the code's history
+
+Temporal, Cadence before it, and Azure Durable Functions all store an *event history* and rebuild state by replaying it.
+
+The history is the system of record for a workflow. It is not a snapshot of its memory but the ordered list of everything that happened to it. Temporal's own description of recovery is blunt about what that implies:
+
+> Temporal doesn't restore memory from a snapshot. It starts the Workflow code from the beginning, replays the Event History step by step.
+
+Re-running the code from the top only reaches the same place again if the code is deterministic, so Temporal forbids the obvious sources of nondeterminism inside workflow code. The wall clock is read from workflow context so it matches the recorded history, random values are captured once and reused, and anything touching the outside world is pushed into an *activity*:
+
+> When a Workflow calls an Activity, the Activity runs once, its result is recorded in the Event History. During replay, that result is reused, not recomputed.
+
+Two things follow from this design.
+
+The first is that a workflow's entire durable state is its event history. That makes the engine, functionally, a database for histories.
+
+Temporal Server is built as four independently scalable services, Frontend, History, Matching, and Worker, over a pluggable persistence layer that runs on Cassandra, MySQL, or Postgres. The History service shards execution histories across that store, and Matching dispatches tasks to workers that poll task queues. This is a purpose-built distributed database with workflow semantics on top, not a thin layer over a queue.
+
+The second consequence is a hard limit.
+
+Because resuming a workflow means replaying its whole history, the cost of recovery grows with history length, and Temporal caps it. A single workflow execution is terminated past **51,200 events or 50 MB** of history, with a warning emitted at 10,240 events or 10 MB.
+
+To run longer, a workflow calls *Continue-As-New*, which atomically closes the current execution and starts a fresh one with a new run ID and an empty history. The limit exists for exactly the reason replay implies: a worker picking up an unfamiliar workflow has to replay everything before it can make progress.
+
+![Figure 1. Two ways to make a program durable. Both re-run the code from the top after a crash; the replay camp feeds back a recorded event stream, the checkpoint camp reads one stored row per completed step.](/blog/durable-execution-two-models.svg)
+
+## The checkpoint camp: store each step's output
+
+The library behind the slogan is DBOS Transact, and it takes the opposite route.
+
+It is not a service you deploy alongside your application. It is a library inside your application process, and the durable state lives in your own Postgres. There is no orchestrator in the path:
+
+> Application servers directly communicate with Postgres to execute workflows instead of going through a central orchestrator.
+
+The core recovery path reduces to two Postgres tables.
+
+`workflow_status` holds one row per workflow, keyed by `workflow_uuid`, with its status, final output, and error. `operation_outputs` holds one row per completed step, keyed by the composite `(workflow_uuid, function_id)`, storing that step's output.
+
+Recovery is then a lookup keyed by step number:
+
+> DBOS restarts each interrupted workflow by calling it with its checkpointed inputs. As the workflow re-executes, it checks before each step if that step's output is checkpointed in Postgres. If there is a checkpoint, the step returns the checkpointed output instead of executing.
+
+The exactly-once checkpoint guarantee falls out of Postgres constraints rather than a separate coordination protocol. Two workers that recover the same workflow both try to write the same `(workflow_uuid, function_id)` row, the primary key collides, one wins, and the other backs off. DBOS describes this directly: "Postgres database integrity constraints let them detect the duplicate work on checkpoint and back off."
+
+Queues work the same way. Tasks are dequeued with the row-locking pattern `SELECT … FOR UPDATE SKIP LOCKED`, so each enqueued item is claimed by exactly one worker.
+
+On a single database, DBOS reports sustaining **more than 40,000 workflows or steps per second**, the basis for its headline figure of four billion workflows a day.
+
+![Figure 2. DBOS recovery is a per-step lookup against operation_outputs. A checkpoint hit returns the stored output and skips the side effect; a miss runs the step and writes its row.](/blog/dbos-recovery-loop.svg)
+
+Set the two side by side and the difference is precise. Both systems re-run the workflow code from the top after a crash. The replay camp reconstructs state by feeding a recorded stream of events back through the code, while the checkpoint camp reconstructs it by reading one stored row per completed step.
+
+In one line: Temporal stores what happened, DBOS stores what each step returned.
+
+## Where the slogan is exactly right
+
+The strongest part of the DBOS argument is the part most comparisons miss, and it is a direct consequence of putting the checkpoint in the same database as your data.
+
+Consider a step that writes a row into your application's `payments` table to record a completed charge.
+
+Under DBOS, that write to `payments` and the checkpoint into `operation_outputs` are writes to the same Postgres, so they commit in a single transaction. Either both database writes land or neither does. There is no window in which the row exists but the system forgot the step ran, and none in which the system marks the step done but the row is missing.
+
+An external orchestrator cannot offer that single transaction.
+
+Temporal's history lives in Temporal's store, your `payments` row lives in your database, and an activity that writes the row and then reports completion to Temporal is doing two writes to two systems with a gap between them. A crash in that gap is the entire problem durable execution exists to solve.
+
+The standard mitigation is to thread an idempotency key through every activity, so a retried activity recognizes its own earlier effect and skips it. That works, but it is bookkeeping you write and maintain at every boundary.
+
+For the common case where a workflow's side effects are writes to the database it already checkpoints into, the in-database design removes that whole class of bookkeeping. Observability comes along for free, since inspecting live or historical workflow state is a `SELECT` against tables you own rather than an API call to someone else's system.
+
+That is what "all you need" actually buys, and only an in-database engine can give it.
+
+## Where the slogan elides something
+
+Two ceilings sit under the claim, and both are made visible by the systems it dismisses.
+
+The first is single-writer scale.
+
+More than 40,000 steps per second on one Postgres is a high number, but it is one write primary handling every checkpoint write. Read replicas do not take writes, and the queue is workers polling a table with row locks, which is steady load a push-based dispatcher avoids.
+
+Scaling durable execution past one database means sharding the database under your application, the hard kind of sharding, across your own data. Temporal made the opposite trade on purpose. It scales the History service horizontally across a Cassandra cluster and pays for that with the 51,200-event cap and Continue-As-New. Neither ceiling is free, and which one you hit first depends on your shape.
+
+The second is the latency floor, and Restate is the clean counterargument.
+
+Restate is a single Rust binary that runs as a proxy in front of your services. Rather than reuse an existing log or database, its authors wrote their own replicated log, *Bifrost*, on the grounds that nothing available was fast enough:
+
+> They built their own implementation of a distributed replicated log because they didn't find any of the existing logs suitable in terms of latency (single roundtrip, quorum replication with external consensus).
+
+A synchronous Postgres write per step is unremarkable at the latencies of human-facing or service-orchestration workflows. It becomes a real cost when a step is a per-message operation in a hot path.
+
+The vendor that optimized hardest for low-latency durable execution decided a general store was not all you need and built a special one. That decision is data about where the boundary actually sits.
+
+## Both camps are building a database
+
+Step back, and the two approaches are converging from opposite directions on the same fact.
+
+Temporal started from workflow orchestration and ended up building a sharded, special-purpose database for execution histories, with its own size limits, garbage collection, and pluggable storage engines. DBOS started from database research and pointed durable execution at a database that already exists.
+
+The DBOS project's founding thesis, from its 2022 VLDB paper, was larger than workflows:
+
+> a distributed transactional DBMS should be the basis for a scalable cluster OS.
+
+If an entire operating system should sit on a transactional database, a workflow engine sitting on one is the modest case. Durable execution is the most shippable slice of that thesis.
+
+And the company shipping it is led by Michael Stonebraker, who created Postgres, and Matei Zaharia, who created Spark. What they are selling, in effect, is the claim that the database they spent careers on was the missing orchestrator all along.
+
+So the honest framing is not Postgres versus a workflow engine. It is a general-purpose database against a special-purpose one, both doing the same job, because durable execution is fundamentally a database problem. Temporal's apparent complexity is mostly the cost of having built the specialized execution database that DBOS borrows wholesale from Postgres.
+
+## So, is Postgres all you need
+
+For a large class of backends, yes.
+
+Specifically, the ones already storing their data in Postgres, running at rates a single primary can serve, with steps at workflow latencies rather than per-message latencies. For them, the single-transaction coupling makes Postgres not just sufficient but better than an external orchestrator.
+
+The cases it does not cover are precisely the ones that pushed Temporal to shard its history store and Restate to write its own log: very high fan-out, single workflows with very long histories, and a latency floor below what a synchronous per-step write allows.
+
+So the verdict is narrow. Durable execution is a database problem whichever camp you join, and the only real question is whether that database is general or special-purpose. For a backend already on Postgres and running below one primary's write ceiling, the answer is yes, and the single transaction makes it the better answer. Past that ceiling the slogan stops being true, and the systems it waved away are exactly where the answers went.
+
+---
+
+## References
+
+1. DBOS. *Postgres Is All You Need for Durable Execution*. DBOS blog, 2026. [Link](https://www.dbos.dev/blog/postgres-is-all-you-need-for-durable-execution)
+2. DBOS. *Durable Execution Architecture*. DBOS documentation. [Link](https://docs.dbos.dev/architecture)
+3. Skiadopoulos, A., et al. *DBOS: A DBMS-oriented Operating System*. Proceedings of the VLDB Endowment, Vol. 15, No. 1, 2021, pp. 21–30. [PDF](https://vldb.org/pvldb/vol15/p21-skiadopoulos.pdf)
+4. Cafarella, M., et al. *A Progress Report on DBOS: A Database-oriented Operating System*. CIDR 2022. [PDF](https://people.eecs.berkeley.edu/~matei/papers/2022/cidr_dbos.pdf)
+5. Temporal. *Workflows* and *Temporal Server* documentation. [Link](https://docs.temporal.io/workflows)
+6. Temporal. *Workflow Execution limits*. Temporal Platform documentation. [Link](https://docs.temporal.io/workflow-execution/limits)
+7. Restate. *What is Durable Execution?* and *Building a modern Durable Execution Engine from First Principles*. [Link](https://www.restate.dev/what-is-durable-execution)
+8. Temporal. *A journey: Durable Task Framework, Uber, & open source magic*. [Link](https://temporal.io/blog/samars-journey)
