@@ -9,11 +9,20 @@ const blogs = Array.from(allBlogs);
 const staticRoutes = ["/", "/blog"];
 
 function withLocalePrefix(route: string, locale: string) {
-	if (locale === appConfig.i18n.defaultLocale) {
-		return route;
+	const prefix = locale === appConfig.i18n.defaultLocale ? "" : `/${locale}`;
+	// Keep the localized root free of a trailing slash (e.g. "/zh", not "/zh/").
+	if (route === "/") {
+		return prefix || "/";
 	}
-	return `/${locale}${route}`;
+	return `${prefix}${route}`;
 }
+
+// Stable per-build timestamp derived from content, so static routes don't emit a
+// fresh `lastmod` on every request (which makes crawlers distrust the signal).
+const lastContentUpdate = blogs.reduce<Date>((latest, blog: any) => {
+	const updated = new Date(blog.updatedAt || blog.createdAt);
+	return updated > latest ? updated : latest;
+}, new Date(0));
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	const baseUrl = getBaseUrl();
@@ -24,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 			for (const locale of locales) {
 				sitemapList.push({
 					url: `${baseUrl}${withLocalePrefix(route, locale)}`,
-					lastModified: new Date(),
+					lastModified: lastContentUpdate,
 					priority: route === "/" ? 1.0 : 0.8,
 					changeFrequency: "weekly",
 				});
@@ -32,7 +41,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		} else {
 			sitemapList.push({
 				url: `${baseUrl}${route}`,
-				lastModified: new Date(),
+				lastModified: lastContentUpdate,
 				priority: route === "/" ? 1.0 : 0.8,
 				changeFrequency: "weekly",
 			});

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { Locale } from "next-intl";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { components } from "@/components/blog/mdx-components";
 import { metadata } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
@@ -14,8 +14,6 @@ import { DashboardTableOfContents } from "@/components/blog/toc";
 
 const blogs = Array.from(allBlogs);
 
-export const dynamic = "force-dynamic";
-
 export async function generateMetadata({
 	params,
 }: {
@@ -23,7 +21,7 @@ export async function generateMetadata({
 }): Promise<Metadata | undefined> {
 	const { slug, locale } = await params;
 
-	const blog = (await getBlogsFromParams(slug)) as any;
+	const blog = getBlogForParams(slug, locale) as any;
 
 	if (!blog) {
 		return {};
@@ -39,33 +37,31 @@ export async function generateMetadata({
 }
 
 type BlogsPageProps = {
-	params: Promise<{ slug: string[] }>;
+	params: Promise<{ slug: string[]; locale: Locale }>;
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-async function getBlogsFromParams(slugs: string[]) {
-	const locale = await getLocale();
+function getBlogForParams(slugs: string[], locale: string) {
 	const slug = slugs?.join("/") || "";
 	const blog = blogs.find(
 		(blog: any) => blog.slug === slug && blog.locale === locale,
 	);
 
-	if (!blog) {
-		return null;
-	}
-
-	return blog;
+	return blog ?? null;
 }
 
-export async function generateStaticParams(): Promise<string[]> {
-	return blogs.map((blog: any) => blog.slug.split("/"));
+export function generateStaticParams() {
+	return blogs.map((blog: any) => ({
+		locale: blog.locale,
+		slug: blog.slug.split("/"),
+	}));
 }
 
 export default async function BlogPage(props: BlogsPageProps) {
 	const isTocHidden = false;
-	const { slug } = await props.params;
-	const blog = (await getBlogsFromParams(slug)) as any;
-	const locale = await getLocale();
+	const { slug, locale } = await props.params;
+	setRequestLocale(locale);
+	const blog = getBlogForParams(slug, locale) as any;
 
 	if (!blog) {
 		notFound();
