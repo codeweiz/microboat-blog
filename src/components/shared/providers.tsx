@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Fraunces, Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import type { PropsWithChildren } from "react";
 import { Toaster } from "@/components/ui/sonner";
@@ -14,6 +14,14 @@ const geistMono = Geist_Mono({
 	subsets: ["latin"],
 });
 
+// Editorial display/serif face for headings and long-form prose.
+const fraunces = Fraunces({
+	variable: "--font-fraunces",
+	subsets: ["latin"],
+	style: ["normal", "italic"],
+	display: "swap",
+});
+
 export async function AppProviders({
 	children,
 	locale,
@@ -23,7 +31,7 @@ export async function AppProviders({
 	return (
 		<html lang={locale} suppressHydrationWarning>
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased min-w-screen overflow-x-hidden`}
+				className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} antialiased min-w-screen overflow-x-hidden`}
 			>
 				<ThemeProvider
 					defaultTheme={defaultMode}

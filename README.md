@@ -53,7 +53,7 @@ Already configured on this repo:
 
 - **Workflow:** [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml) — runs on push to `main` and on manual dispatch
 - **Secrets** (set on the repo): `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`
-- **Worker name:** `micorboat-blog` (in `wrangler.jsonc`)
+- **Worker name:** `microboat-blog` (in `wrangler.jsonc`)
 
 ### If you fork this repo
 

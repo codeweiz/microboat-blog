@@ -26,12 +26,44 @@
 	},
 	"navigation": {
 		"home": "Home",
-		"blog": "Blog"
+		"blog": "Blog",
+		"tags": "Tags",
+		"about": "About"
 	},
 	"blog": {
 		"title": "Blog",
 		"description": "Long-form notes on what I'm building and learning.",
 		"keywords": "blog, engineering, full-stack, infra, devtools"
+	},
+	"post": {
+		"readingTime": "{minutes} min read",
+		"words": "{words, number} words",
+		"related": "Related posts",
+		"previous": "Previous",
+		"next": "Next"
+	},
+	"tags": {
+		"title": "Tags",
+		"description": "Browse posts by topic.",
+		"taggedWith": "Posts tagged “{tag}”",
+		"postCount": "{count, plural, one {# post} other {# posts}}",
+		"allTags": "All tags"
+	},
+	"about": {
+		"title": "About",
+		"heading": "Microboat",
+		"intro": "Full-stack engineer writing field notes on backend, frontend, infra, and the tools in between.",
+		"paragraphs": [
+			"I'm Microboat. I build full-stack systems and write about what I learn along the way — the design decisions, the trade-offs, and the occasional sharp edge.",
+			"This blog is where I keep long-form notes: distributed systems, databases, infrastructure, and developer tooling. Posts are bilingual where it helps.",
+			"It runs on Next.js and Cloudflare Workers, and it's open source."
+		],
+		"elsewhere": "Elsewhere"
+	},
+	"search": {
+		"label": "Search",
+		"placeholder": "Search posts…",
+		"empty": "No results."
 	},
 	"footer": {
 		"links": {

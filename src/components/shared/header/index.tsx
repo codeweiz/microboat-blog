@@ -4,11 +4,16 @@ import { Menu, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import React from "react";
 import { Logo } from "@/components/icons/logo";
+import { LocaleToggle } from "@/components/shared/header/locale-toggle";
+import { ThemeToggleButton } from "@/components/shared/header/theme-toggle-button";
+import { SearchDialog } from "@/components/shared/search/search-dialog";
+import { appConfig } from "@/config";
 import { getNavItems } from "@/config/navigation";
 import { Link as I18nLink } from "@/i18n/navigation";
+import type { SearchEntry } from "@/lib/posts";
 import { cn } from "@/lib/utils";
 
-export const Header = () => {
+export const Header = ({ searchIndex }: { searchIndex: SearchEntry[] }) => {
 	const [menuState, setMenuState] = React.useState(false);
 	const navItems = getNavItems();
 	const t = useTranslations("app");
@@ -26,7 +31,7 @@ export const Header = () => {
 						<I18nLink
 							href="/"
 							aria-label="home"
-							className="flex items-center gap-2 font-extrabold text-xl"
+							className="flex items-center gap-2 font-serif text-xl font-bold"
 						>
 							<Logo />
 							{t("name")}
@@ -45,24 +50,32 @@ export const Header = () => {
 							)}
 						</button>
 
-						<ul
+						<div
 							className={cn(
-								"w-full flex-col gap-2 lg:flex lg:w-auto lg:flex-row lg:gap-6",
+								"w-full flex-col items-start gap-4 lg:flex lg:w-auto lg:flex-row lg:items-center lg:gap-6",
 								menuState ? "flex" : "hidden",
 							)}
 						>
-							{navItems.map((item) => (
-								<li key={item.id}>
-									<I18nLink
-										href={item.link}
-										className="block py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-										onClick={() => setMenuState(false)}
-									>
-										{item.label}
-									</I18nLink>
-								</li>
-							))}
-						</ul>
+							<ul className="flex w-full flex-col gap-2 lg:w-auto lg:flex-row lg:gap-6">
+								{navItems.map((item) => (
+									<li key={item.id}>
+										<I18nLink
+											href={item.link}
+											className="block py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+											onClick={() => setMenuState(false)}
+										>
+											{item.label}
+										</I18nLink>
+									</li>
+								))}
+							</ul>
+
+							<div className="flex items-center gap-1 lg:gap-2">
+								<SearchDialog index={searchIndex} />
+								{appConfig.ui.theme.enabled && <ThemeToggleButton />}
+								{appConfig.i18n.enabled && <LocaleToggle />}
+							</div>
+						</div>
 					</div>
 				</div>
 			</nav>

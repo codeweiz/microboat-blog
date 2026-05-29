@@ -6,6 +6,8 @@ export function getNavItems(): NavItem[] {
 	return [
 		{ id: 1, label: t("home"), link: "/" },
 		{ id: 2, label: t("blog"), link: "/blog" },
+		{ id: 3, label: t("tags"), link: "/tags" },
+		{ id: 4, label: t("about"), link: "/about" },
 	];
 }
 

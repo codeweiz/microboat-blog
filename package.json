@@ -1,5 +1,5 @@
 {
-	"name": "micorboat-blog",
+	"name": "microboat-blog",
 	"version": "0.1.0",
 	"description": "Microboat — personal blog on Next.js + Cloudflare Workers",
 	"private": true,

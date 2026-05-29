@@ -1,21 +1,12 @@
 "use client";
 
+import type { TOCItemType } from "fumadocs-core/toc";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-interface Item {
-	title: string | { props: { children: string } };
-	url: string;
-	depth: number;
-}
-
-interface TableOfContents {
-	items: Item[];
-}
-
 interface TocProps {
-	items: Item[];
+	items: TOCItemType[];
 }
 
 export function DashboardTableOfContents({ items }: TocProps) {
@@ -78,39 +69,32 @@ function useActiveItem(itemIds: string[]) {
 }
 
 interface TreeProps {
-	items: TableOfContents["items"];
+	items: TOCItemType[];
 	activeItem?: string;
 }
 
 function Tree({ items, activeItem }: TreeProps) {
 	return items?.length ? (
 		<ul className="m-2 list-none">
-			{items.map((item, index) => {
-				const titleText =
-					typeof item.title === "string"
-						? item.title
-						: item.title?.props?.children || "";
-
-				return (
-					<li
-						key={index}
-						className={cn("mt-0 pt-2")}
-						style={{ paddingLeft: `${(item.depth - 1) * 16}px` }}
+			{items.map((item, index) => (
+				<li
+					key={index}
+					className={cn("mt-0 pt-2")}
+					style={{ paddingLeft: `${(item.depth - 1) * 16}px` }}
+				>
+					<a
+						href={item.url}
+						className={cn(
+							"inline-block no-underline transition-colors hover:text-foreground",
+							item.url === `#${activeItem}`
+								? "font-medium text-foreground"
+								: "text-muted-foreground",
+						)}
 					>
-						<a
-							href={item.url}
-							className={cn(
-								"inline-block no-underline transition-colors hover:text-foreground",
-								item.url === `#${activeItem}`
-									? "font-medium text-foreground"
-									: "text-muted-foreground",
-							)}
-						>
-							{titleText}
-						</a>
-					</li>
-				);
-			})}
+						{item.title}
+					</a>
+				</li>
+			))}
 		</ul>
 	) : null;
 }
