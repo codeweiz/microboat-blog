@@ -1,80 +1,83 @@
-import { ArrowRight, Github } from "lucide-react";
+import { ArrowRight, Github, Network, Rss } from "lucide-react";
 import type { Locale } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
+import { KnowledgeMap } from "@/components/home/knowledge-map";
+import { LivingNotes } from "@/components/home/living-notes";
+import { StartHere } from "@/components/home/start-here";
 import { Button } from "@/components/ui/button";
 import { Link as I18nLink } from "@/i18n/navigation";
-import { blogs as allBlogs } from "@/source";
-
-const blogs = Array.from(allBlogs);
+import {
+	getConceptClusters,
+	getPostsByLocale,
+	getRecentlyUpdatedPosts,
+	getStartHerePosts,
+} from "@/lib/posts";
 
 export default async function Home() {
 	const locale = (await getLocale()) as Locale;
 	const t = await getTranslations("home");
-	const stack = t.raw("stack") as string[];
+	const principles = t.raw("principles") as string[];
 
-	const latestPosts = blogs
-		.filter((post: any) => post.locale === locale)
-		.sort((a: any, b: any) => b.createdAt.getTime() - a.createdAt.getTime())
-		.slice(0, 3);
+	const posts = getPostsByLocale(locale);
+	const startHere = getStartHerePosts(locale, 5);
+	const clusters = getConceptClusters(locale, 8);
+	const livingNotes = getRecentlyUpdatedPosts(locale, 4);
+	const latest = posts.slice(0, 4);
 
 	return (
 		<>
-			<section className="pt-36 pb-24 px-6">
-				<div className="mx-auto max-w-3xl text-center">
-					<span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/60 px-3 py-1 text-xs font-medium text-muted-foreground shadow-sm backdrop-blur">
-						<span className="relative flex size-1.5">
-							<span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-500 opacity-75" />
-							<span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
-						</span>
+			<section className="px-6 pt-32 pb-16">
+				<div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1fr_0.75fr] lg:items-end">
+					<div>
+						<span className="inline-flex rounded-md border border-border/70 bg-background/70 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-primary shadow-sm backdrop-blur">
 						{t("badge")}
 					</span>
 
-					<h1 className="mt-6 font-serif text-5xl md:text-7xl font-semibold tracking-tight leading-[1.05]">
-						<span className="text-foreground">{t("title").split(",")[0]},</span>
-						<br />
-						<span className="italic text-primary">
-							{t("title").split(",")[1]?.trim()}
-						</span>
+						<h1 className="mt-6 max-w-4xl font-serif text-5xl font-semibold leading-[1.04] tracking-normal md:text-7xl">
+							{t("title")}
 					</h1>
 
-					<p className="mx-auto mt-6 max-w-xl text-base md:text-lg text-muted-foreground">
+						<p className="mt-6 max-w-2xl font-serif text-xl leading-9 text-muted-foreground md:text-2xl">
 						{t("intro")}
 					</p>
 
-					<ul className="mx-auto mt-8 flex max-w-2xl flex-wrap items-center justify-center gap-2">
-						{stack.map((tag) => (
-							<li
-								key={tag}
-								className="rounded-full border border-border/60 bg-background/60 px-3 py-1 text-xs font-medium text-muted-foreground backdrop-blur"
-							>
-								{tag}
-							</li>
-						))}
-					</ul>
-
-					<div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+						<div className="mt-10 flex flex-wrap items-center gap-3">
 						<Button asChild size="lg" className="group">
 							<I18nLink href="/blog">
 								{t("cta")}
 								<ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
 							</I18nLink>
 						</Button>
-						<Button asChild size="lg" variant="outline">
-							<a
-								href="https://github.com/codeweiz"
-								target="_blank"
-								rel="noreferrer"
-							>
-								<Github className="mr-1 h-4 w-4" />
-								GitHub
-							</a>
+							<Button asChild size="lg" variant="outline">
+								<I18nLink href="/blog#knowledge-map">
+									<Network className="mr-1 h-4 w-4" />
+									{t("mapCta")}
+								</I18nLink>
 						</Button>
+					</div>
+				</div>
+					<div className="rounded-lg border bg-muted/20 p-5">
+						<p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+							{t("principlesTitle")}
+						</p>
+						<ul className="mt-4 space-y-3">
+							{principles.map((item) => (
+								<li key={item} className="flex gap-3 text-sm leading-6">
+									<span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+									<span>{item}</span>
+								</li>
+							))}
+						</ul>
 					</div>
 				</div>
 			</section>
 
+			<StartHere posts={startHere} locale={locale} />
+			<KnowledgeMap clusters={clusters} locale={locale} />
+			<LivingNotes posts={livingNotes.length ? livingNotes : latest} locale={locale} />
+
 			<section className="px-6 pb-24">
-				<div className="mx-auto max-w-3xl">
+				<div className="mx-auto max-w-6xl">
 					<div className="flex items-baseline justify-between border-b pb-3">
 						<h2 className="font-serif text-xl font-semibold">{t("latest")}</h2>
 						<I18nLink
@@ -84,8 +87,8 @@ export default async function Home() {
 							{t("viewAll")} →
 						</I18nLink>
 					</div>
-					<ul className="mt-2 divide-y">
-						{latestPosts.map((post: any) => (
+					<ul className="mt-2 grid gap-0 divide-y">
+						{latest.map((post) => (
 							<li key={post.slug}>
 								<I18nLink
 									href={`/blog/${post.slug}`}
@@ -110,6 +113,24 @@ export default async function Home() {
 							</li>
 						))}
 					</ul>
+					<div className="mt-10 flex flex-wrap gap-3 border-t pt-6">
+						<Button asChild variant="outline">
+							<a
+								href="https://github.com/codeweiz"
+								target="_blank"
+								rel="noreferrer"
+							>
+								<Github className="mr-1 h-4 w-4" />
+								GitHub
+							</a>
+						</Button>
+						<Button asChild variant="outline">
+							<a href="/rss.xml">
+								<Rss className="mr-1 h-4 w-4" />
+								RSS
+							</a>
+						</Button>
+					</div>
 				</div>
 			</section>
 		</>

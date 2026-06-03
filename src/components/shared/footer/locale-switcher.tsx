@@ -39,33 +39,18 @@ function LocaleSwitcher() {
 		});
 	};
 
-	if (!mounted) {
-		return (
-			<Select disabled>
-				<SelectTrigger id={id} className="cursor-pointer">
-					<SelectValue placeholder="Select language">
-						<span className="flex items-center gap-2">
-							<Languages className="h-4 w-4" />
-							<span className="truncate">Loading...</span>
-						</span>
-					</SelectValue>
-				</SelectTrigger>
-			</Select>
-		);
-	}
-
 	return (
 		<Select
 			value={locale}
 			onValueChange={(v) => handleLocaleChange(v as Locale)}
-			disabled={isPending}
+			disabled={!mounted || isPending}
 		>
 			<SelectTrigger id={id} className="cursor-pointer">
 				<SelectValue aria-label="Select language">
 					<span className="flex items-center gap-2">
 						<Languages className="h-4 w-4" />
 						<span className="truncate">
-							{appConfig.i18n.locales[locale]?.name}
+							{mounted ? appConfig.i18n.locales[locale]?.name : "Loading..."}
 						</span>
 					</span>
 				</SelectValue>

@@ -8,17 +8,20 @@ import {
 	getAdjacentPosts,
 	getAllPosts,
 	getPostBySlug,
-	getRelatedPosts,
+	getPostsByLocale,
 	postStats,
 } from "@/lib/posts";
+import { getNextReads } from "@/lib/recommendations";
 import { cn } from "@/lib/utils";
 
 import "@/styles/docs-mdx.css";
+import { ContentGraph } from "@/components/blog/content-graph";
 import { Giscus } from "@/components/blog/giscus";
 import { GoToTop } from "@/components/blog/go-to-top";
+import { NextReads } from "@/components/blog/next-reads";
+import { PostLifecycle } from "@/components/blog/post-lifecycle";
 import { PostMeta } from "@/components/blog/post-meta";
 import { PostNav } from "@/components/blog/post-nav";
-import { RelatedPosts } from "@/components/blog/related-posts";
 import { TagPills } from "@/components/blog/tag-pills";
 import { DashboardTableOfContents } from "@/components/blog/toc";
 
@@ -69,7 +72,8 @@ export default async function BlogPage(props: BlogsPageProps) {
 	const MDX = blog.body;
 	const { minutes, words } = postStats(blog);
 	const { older, newer } = getAdjacentPosts(blog.slug, locale);
-	const related = getRelatedPosts(blog, locale);
+	const localePosts = getPostsByLocale(locale);
+	const nextReads = getNextReads(blog, localePosts, 4);
 
 	return (
 		<main
@@ -90,6 +94,7 @@ export default async function BlogPage(props: BlogsPageProps) {
 						words={words}
 						author={blog.author}
 					/>
+					<PostLifecycle post={blog} locale={locale} className="mt-6" />
 				</header>
 
 				<div className="prose mx-auto mt-8 font-serif">
@@ -98,7 +103,22 @@ export default async function BlogPage(props: BlogsPageProps) {
 
 				<TagPills className="mt-10" tags={blog.tags} />
 
-				<RelatedPosts posts={related} />
+				{blog.concepts?.length ? (
+					<div className="mt-6 flex flex-wrap gap-2">
+						{blog.concepts.map((concept) => (
+							<span
+								key={concept}
+								className="rounded-md border bg-muted/30 px-2.5 py-1 text-xs text-muted-foreground"
+							>
+								{concept}
+							</span>
+						))}
+					</div>
+				) : null}
+
+				<ContentGraph post={blog} posts={localePosts} />
+
+				<NextReads reads={nextReads} />
 
 				<PostNav older={older} newer={newer} />
 

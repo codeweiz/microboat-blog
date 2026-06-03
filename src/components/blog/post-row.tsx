@@ -14,6 +14,18 @@ export function PostRow({ post }: { post: BlogPost }) {
 					{post.title}
 				</I18nLink>
 			</h3>
+			<div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
+				<span className="rounded border px-1.5 py-0.5 uppercase">{post.type}</span>
+				<span className="rounded border px-1.5 py-0.5">{post.stage}</span>
+				{post.concepts?.slice(0, 2).map((concept) => (
+					<span key={concept} className="rounded border px-1.5 py-0.5">
+						{concept}
+					</span>
+				))}
+			</div>
+			<p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">
+				{post.description}
+			</p>
 			<PostMeta
 				className="mt-1.5"
 				date={post.createdAt}

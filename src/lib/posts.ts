@@ -1,5 +1,6 @@
 import { getReadingStats, type ReadingStats } from "@/lib/reading-stats";
 import { blogs as allBlogs } from "@/source";
+import { getPostConcepts } from "./content-graph";
 
 export type BlogPost = (typeof allBlogs)[number];
 
@@ -32,6 +33,11 @@ export interface SearchEntry {
 	title: string;
 	description: string;
 	tags: string[];
+	concepts: string[];
+	aliases: string[];
+	type: string;
+	stage: string;
+	series?: string;
 	headings: string[];
 	date: string;
 }
@@ -43,9 +49,109 @@ export function getSearchIndex(locale: string): SearchEntry[] {
 		title: post.title,
 		description: post.description,
 		tags: post.tags ?? [],
+		concepts: post.concepts ?? [],
+		aliases: post.aliases ?? [],
+		type: post.type,
+		stage: post.stage,
+		series: post.series,
 		headings: post.structuredData.headings.map((h) => h.content),
 		date: post.createdAt.toISOString(),
 	}));
+}
+
+export function getFeaturedPosts(locale: string, limit = 3): BlogPost[] {
+	return getPostsByLocale(locale)
+		.filter((post) => post.featured)
+		.slice(0, limit);
+}
+
+export function getStartHerePosts(locale: string, limit = 5): BlogPost[] {
+	return getPostsByLocale(locale)
+		.filter((post) => post.startHere)
+		.slice(0, limit);
+}
+
+export function getRecentlyUpdatedPosts(locale: string, limit = 4): BlogPost[] {
+	return getPostsByLocale(locale)
+		.filter((post) => post.updatedAt.getTime() > post.createdAt.getTime())
+		.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
+		.slice(0, limit);
+}
+
+export function getPostsByType(
+	locale: string,
+): { type: string; posts: BlogPost[] }[] {
+	const groups = new Map<string, BlogPost[]>();
+	for (const post of getPostsByLocale(locale)) {
+		const bucket = groups.get(post.type) ?? [];
+		bucket.push(post);
+		groups.set(post.type, bucket);
+	}
+	return Array.from(groups, ([type, typePosts]) => ({
+		type,
+		posts: typePosts,
+	})).sort((a, b) => b.posts.length - a.posts.length || a.type.localeCompare(b.type));
+}
+
+export function getPostsByStage(
+	locale: string,
+): { stage: string; posts: BlogPost[] }[] {
+	const groups = new Map<string, BlogPost[]>();
+	for (const post of getPostsByLocale(locale)) {
+		const bucket = groups.get(post.stage) ?? [];
+		bucket.push(post);
+		groups.set(post.stage, bucket);
+	}
+	return Array.from(groups, ([stage, stagePosts]) => ({
+		stage,
+		posts: stagePosts,
+	})).sort((a, b) => b.posts.length - a.posts.length || a.stage.localeCompare(b.stage));
+}
+
+export function getConceptClusters(
+	locale: string,
+	limit = 8,
+): { concept: string; posts: BlogPost[] }[] {
+	const groups = new Map<string, BlogPost[]>();
+	for (const post of getPostsByLocale(locale)) {
+		for (const concept of getPostConcepts(post)) {
+			const bucket = groups.get(concept) ?? [];
+			bucket.push(post);
+			groups.set(concept, bucket);
+		}
+	}
+	return Array.from(groups, ([concept, conceptPosts]) => ({
+		concept,
+		posts: conceptPosts,
+	}))
+		.sort(
+			(a, b) =>
+				b.posts.length - a.posts.length || a.concept.localeCompare(b.concept),
+		)
+		.slice(0, limit);
+}
+
+export function getSeriesGroups(
+	locale: string,
+): { series: string; posts: BlogPost[] }[] {
+	const groups = new Map<string, BlogPost[]>();
+	for (const post of getPostsByLocale(locale)) {
+		if (!post.series) {
+			continue;
+		}
+		const bucket = groups.get(post.series) ?? [];
+		bucket.push(post);
+		groups.set(post.series, bucket);
+	}
+	return Array.from(groups, ([series, seriesPosts]) => ({
+		series,
+		posts: seriesPosts.sort(
+			(a, b) =>
+				(a.seriesOrder ?? Number.MAX_SAFE_INTEGER) -
+					(b.seriesOrder ?? Number.MAX_SAFE_INTEGER) ||
+				b.createdAt.getTime() - a.createdAt.getTime(),
+		),
+	})).sort((a, b) => b.posts.length - a.posts.length || a.series.localeCompare(b.series));
 }
 
 /** Distinct tags for a locale with their post counts, busiest first. */

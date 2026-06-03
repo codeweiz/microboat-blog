@@ -8,12 +8,19 @@
 		}
 	},
 	"home": {
-		"badge": "Personal blog · full-stack",
-		"title": "Build small, ship often.",
-		"intro": "Field notes from building full-stack — backend, frontend, infra, and the tools in between. Open-source-curious, type-safe by default.",
-		"cta": "Read the blog",
+		"badge": "Public knowledge system",
+		"title": "A working map for engineering judgment.",
+		"intro": "I write about AI toolchains, infrastructure, developer experience, and long-lived systems. Posts are not finished when they are published; they keep growing as new projects, failures, and evidence connect back to them.",
+		"cta": "Start reading",
+		"mapCta": "Explore the map",
 		"latest": "Latest posts",
 		"viewAll": "View all",
+		"principlesTitle": "How to read this site",
+		"principles": [
+			"If this is your first visit, start with Start Here rather than the latest post.",
+			"If you are researching a problem, follow topics, concepts, and backlinks.",
+			"If you care whether a post still holds up, check its stage, update reason, and connected reads."
+		],
 		"stack": [
 			"backend",
 			"frontend",
@@ -52,11 +59,11 @@
 	"about": {
 		"title": "About",
 		"heading": "Microboat",
-		"intro": "Full-stack engineer writing field notes on backend, frontend, infra, and the tools in between.",
+		"intro": "I use this site to make engineering judgment visible: the tradeoffs behind tools, the failure modes behind systems, and notes that keep growing with experience.",
 		"paragraphs": [
-			"I'm Microboat. I build full-stack systems and write about what I learn along the way — the design decisions, the trade-offs, and the occasional sharp edge.",
-			"This blog is where I keep long-form notes: distributed systems, databases, infrastructure, and developer tooling. Posts are bilingual where it helps.",
-			"It runs on Next.js and Cloudflare Workers, and it's open source."
+			"This site is not a resume and not a chronological diary. It is a public engineering knowledge system for AI toolchains, infrastructure, developer experience, organizational learning, and long-lived system design.",
+			"I care more about why a design holds than which technology was used. A post that only records a conclusion expires quickly; a post that records the path of judgment can remain useful when the next similar problem appears.",
+			"If this is your first visit, start with Start Here. If you are researching a topic, follow topics, concepts, backlinks, and the local graph. The site runs on Next.js, MDX, and Cloudflare Workers."
 		],
 		"elsewhere": "Elsewhere"
 	},

@@ -36,6 +36,11 @@ export function SearchDialog({ index }: { index: SearchEntry[] }) {
 				entry.title,
 				entry.description,
 				entry.tags.join(" "),
+				entry.concepts.join(" "),
+				entry.aliases.join(" "),
+				entry.type,
+				entry.stage,
+				entry.series ?? "",
 				entry.headings.join(" "),
 			]
 				.join(" ")
