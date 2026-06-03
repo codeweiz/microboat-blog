@@ -1,0 +1,8 @@
+interface:
+  display_name: "Supply Chain Incident Triage"
+  short_description: "Investigate npm, token, and CI supply-chain exposure"
+  brand_color: "#2563EB"
+  default_prompt: "Use $supply-chain-incident-triage to investigate whether this repository was exposed to a malicious npm package or CI credential leak."
+
+policy:
+  allow_implicit_invocation: true

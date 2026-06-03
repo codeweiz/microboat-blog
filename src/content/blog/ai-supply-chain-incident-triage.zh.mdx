@@ -1,0 +1,295 @@
+---
+title: "从一键偷 Token 到 npm 投毒：AI 安全别只等扁鹊拔针"
+description: "GitHub token stealing 和 Red Hat npm 包投毒这两个事件，真正提醒我们的不是 AI 能不能发现漏洞，而是个人和企业能不能把披露、验证、修补和预防做成一条可执行的证据链。"
+keywords: "AI 安全, 供应链安全, GitHub token, npm supply chain, Red Hat npm, VS Code, CI/CD, credential rotation, incident response"
+createdAt: 2026-06-03T22:30:00+08:00
+updatedAt: 2026-06-03T22:30:00+08:00
+tags: ["ai", "security", "supply-chain", "software-engineering", "notes"]
+author: Microboat
+image: "/blog/supply-chain-ai-triage-hero.png"
+---
+
+<Callout title="AI 摘要">
+
+- 这两天我主要看了两个安全事件：一个是 Ammar Askar 披露的 VS Code / `github.dev` token stealing 风险，另一个是 Red Hat Cloud Services npm scope 下多包被植入恶意 `preinstall` payload。
+- 前者说明，浏览器里的开发工具一旦持有跨仓库 token，普通链接也可能变成仓库权限风险；后者说明，供应链攻击最危险的地方是它藏在正常包名、正常版本、正常安装流程里。
+- AI 在这类事故里最有价值的位置，不是替人下结论，而是帮人按证据链排查：锁文件、包版本、CI run、安装脚本、出网记录、凭证可达性、轮换结果。
+- 个人的优先级是止血：清理 `github.dev` 站点数据、检查授权、轮换高权限 token、核对异常仓库活动。企业的优先级是控面：冻结入口、确认命中、固定证据、判定影响面、轮换凭证、清理缓存、重建制品。
+- 文末附了一份完整的 AI 排查 Skill，可以下载给 Codex / Claude Code / Cursor 这类工具使用。请不要把真实 token、私钥或敏感日志直接贴给外部 AI。
+
+</Callout>
+
+《鹖冠子·世贤》里有一段很适合今天的安全行业。
+
+魏文王问扁鹊，兄弟三人谁最会治病。扁鹊答：
+
+> “長兄最善，中兄次之，扁鵲最為下。”
+
+问为什么，书里又说，长兄是“未有形而除之”。
+
+意思很直白：扁鹊有名，不是因为他的医术最高，而是因为他总在病已经发作、所有人都看得见的时候出手。真正厉害的医生，常常没有那么显赫，因为他在病还没长成的时候就处理掉了。
+
+软件安全也是这样。
+
+我们总是记得事故爆发后的英雄：谁找到了漏洞，谁写了 PoC，谁熬夜修了线上，谁把一堆 token 连夜轮换掉。但真正好的安全系统，应该让这些英雄少出场。它应该在恶意包刚发布、异常脚本刚进入 lockfile、CI 刚开始读环境变量、浏览器工具刚握住高权限 token 的时候，就把病灶按住。
+
+这两天翻资料时，我一直觉得有两件事应该放在一起讲。
+
+一个是 Ammar Askar 在 2026 年 6 月 2 日写的 [1-Click GitHub Token Stealing via a VSCode Bug](https://blog.ammaraskar.com/github-token-stealing/)。另一个是 2026 年 6 月 1 日公开的 [Red Hat Cloud Services npm 包供应链事件](https://access.redhat.com/security/vulnerabilities/RHSB-2026-006)。
+
+表面看，一个像浏览器开发工具里的漏洞，一个像 npm 包投毒。放在一起看，它们其实在问同一个问题：
+
+**当 AI 时代的软件工作流越来越自动化，谁来证明一次操作真的安全？**
+
+![一张夜间工程桌面的插图：笔记本屏幕上是抽象依赖图，红色线索从包和网页链接指向凭证保险箱，旁边有 AI 生成的排查清单。](/blog/supply-chain-ai-triage-hero.png)
+
+## 最有名的医生，往往来得最晚
+
+安全事故有一种奇怪的叙事偏好：越像急诊，越容易被记住。
+
+一个研究员点开奇怪的链路，发现 token 可以被拿走。一个安全团队盯着 npm registry，发现某个可信 scope 下的包突然长出 4MB 的混淆脚本。一个 CI job 在半夜访问了不该访问的域名。一个开发者早上打开 Slack，发现“所有人先别跑 install”。
+
+这些时刻都很抓人。
+
+但如果只盯着这些时刻，就会把安全误解成一种“救火能力”。救火当然重要，可更重要的问题是：为什么火能烧进来？
+
+扁鹊治的是“病已成形”。在软件里，这对应的是漏洞已经披露、恶意包已经安装、token 已经暴露、CI 已经跑过、制品已经发布。到了这一步，再聪明的 AI 也只能帮你缩短抢救时间。
+
+真正该追求的，是“未有形而除之”。
+
+不是等到事故爆出来才问 AI：“我是不是中招了？”而是在依赖更新、浏览器开发环境、CI 权限、包发布链路、凭证生命周期里，提前设置一套证据和护栏。
+
+这也是我想写它们的原因。它们不只是两个安全八卦，而是两张很具体的体检单。
+
+## 一个链接，为什么能摸到仓库钥匙
+
+先看第一个事件。
+
+很多人知道 GitHub 有一个很方便的入口：把仓库 URL 里的 `github.com` 改成 `github.dev`，浏览器里就能打开一个轻量版 VS Code。对读代码、临时改文件、发 PR 来说，这个体验很顺。
+
+顺手的背后，是权限。
+
+我读 Ammar 那篇文章时，最先警觉的不是后面的 PoC，而是前面这一点：`github.com` 会把一个 OAuth token 交给 `github.dev`，让浏览器里的 VS Code 可以代表用户访问 GitHub。关键点在于，这个 token 不是只针对当前仓库。它可能覆盖用户能访问的其他仓库，包括私有仓库。
+
+这就像你进了一间会议室，门口给你的不是这间会议室的钥匙，而是一大串办公区通行证。平时没人注意，因为你只是进去看白板。但如果会议室里的投影系统能被人诱导执行一串动作，钥匙就不再只是钥匙，它会变成攻击面。
+
+漏洞链条里最有意思的部分，不是“偷 token”四个字，而是边界怎么一点点松掉。
+
+VS Code 的 webview 本来有隔离。Jupyter notebook、Markdown preview 这类内容被放在不同 origin 的 iframe 里，按理说里面的 JavaScript 不能直接伸手摸主界面。问题出在用户体验：人在 webview 里按快捷键，也希望 VS Code 能响应。于是 webview 会把 `keydown` 事件转给主 workbench。
+
+这原本是为了让界面好用。
+
+可如果不可信内容能伪造这些键盘事件，它就可能触发命令面板、接受通知、安装扩展，最后让恶意扩展去读取 GitHub API token。Ammar 后来在 [VS Code issue #319593](https://github.com/microsoft/vscode/issues/319593) 里把问题压得更短：webviews 可以触发主 workbench 的任意快捷键。
+
+普通读者不需要记住每个快捷键细节。真正要记住的是这句话：
+
+**不是所有“看起来只是打开网页”的动作，都只拥有网页权限。**
+
+当一个网页开发环境持有你的 GitHub 身份，它就不是普通网页。它是浏览器、编辑器、扩展系统、OAuth token 和仓库权限叠在一起的工作台。任何一层为了方便让边界变软，最后都可能把“点击链接”变成“交出钥匙”。
+
+## 一个 npm install，为什么会变成公司失血
+
+再看第二个事件。
+
+Red Hat 的公告写得很克制：2026 年 6 月 1 日，有多个 `@redhat-cloud-services` npm namespace 下的包被公开披露存在供应链 compromise。初步调查指向一个被入侵的 GitHub 账号，它被用来向 RedHatInsights 组织下的仓库推送未授权提交。Red Hat 后续移除了 npm 上的 compromised versions，并继续做 build system 和 dependency tracking 分析。
+
+这段话没有太多戏剧性，但它已经足够说明问题：攻击不一定从陌生包名开始。
+
+它可以从你信任的 scope、你熟悉的包名、你正常的安装流程开始。
+
+真正让我觉得后背一紧的，是 StepSecurity 看到的安装阶段行为：这些包里有恶意 payload，会在每次 `npm install` 时通过 `preinstall` 自动执行。它瞄准的不是某个业务系统，而是开发和交付环境里的钥匙：GitHub Actions secrets、AWS、GCP、Azure、Kubernetes、HashiCorp Vault、npm token、CircleCI token 等。
+
+这就是供应链攻击比普通漏洞更麻烦的地方。
+
+普通漏洞常常有明确边界：某个服务、某个接口、某个版本。恶意 npm 包的边界却会顺着安装链路扩散。谁跑过 install？哪台开发机跑过？哪个 CI runner 跑过？哪个 Docker build layer 里缓存过？哪个 release job 拿着 npm token、cloud key、GitHub token 跑过？
+
+如果回答不上来，你就不知道病灶在哪里。
+
+更糟的是，`preinstall` 这种入口太自然了。它不是系统外来的奇怪动作，而是 npm 本来就允许的生命周期脚本。开发者输入的是最普通的命令：
+
+```bash
+npm install
+```
+
+可攻击者看到的是另一件事：这是一个能在开发机或 CI 里执行代码的入口，而且常常能摸到环境变量、配置文件、SSH key、云凭证、registry token。
+
+这不是“下载了一个坏包”这么简单。这是把攻击者请进了构建现场。
+
+## 先别让 AI 断案，让它找证据
+
+这类事故里，AI 很容易被用错。
+
+最差的用法，是把一段新闻、一段日志、一份 lockfile 丢给模型，然后问：“我安全吗？”
+
+这个问题太大，也太危险。AI 可能会给你一个听起来很自信的答案，但它没有替你查 CI run，没有看到真实出网记录，没有验证 token 是否轮换，没有确认缓存里是否还留着恶意 tarball。它只是在语言上给你安慰。
+
+更好的用法，是让 AI 当一个证据书记员和排查副驾驶。
+
+它应该先帮你拆问题：
+
+1. 哪些仓库引用了相关包？
+2. 哪些 lockfile 命中了受影响版本？
+3. 哪些 CI job 在风险窗口里跑过 install？
+4. 那些 job 当时能读到哪些 secrets？
+5. 是否存在异常 `preinstall`、大体积混淆文件、环境变量读取、出网行为？
+6. 哪些凭证需要先轮换？
+7. 哪些缓存、镜像、制品需要重建？
+8. 哪些控制应该补上，防止下次又靠人肉发现？
+
+AI 的价值不在于替你喊“中招”或“没事”，而在于把一堆散落材料整理成一条证据链。
+
+安全排查里最怕的是跳步。
+
+你看到包名，直接升级。你看到 token 风险，直接轮换。你看到 CI 可疑，直接重跑。每个动作单独看都像是对的，但如果没有证据链，最后很容易留下盲点：一个旧 runner 没清，一个缓存没 purge，一个发布 token 没轮换，一个异常 workflow 没删，一个内部镜像还在用污染 layer。
+
+AI 最适合做的，是防止你在焦虑里漏掉这些“无聊但致命”的步骤。
+
+![一张俯视工程工作台插图：左侧是锁文件和包盒，中间是 AI 排查面板，右侧是凭证保险箱、放大镜和清单，表示从证据到轮换再到重建的流程。](/blog/supply-chain-ai-triage-workbench.png)
+
+## 个人怎么止血：先别点，先断钥匙
+
+如果你只是个人开发者，遇到类似 `github.dev` token stealing 这种风险，不需要把自己吓成安全团队。你要做的是按顺序止血。
+
+第一步，停止继续打开可疑 `github.dev` 链接。
+
+尤其是别人发来的 notebook、Markdown preview、带交互内容的仓库链接。不是说所有 `github.dev` 都危险，而是当一个工具既能渲染不可信内容，又握着你的 GitHub 身份时，你要把它当成“带权限的工作环境”，不是普通网页。
+
+第二步，清理 `github.dev` 站点数据。
+
+这里我会先做一件很朴素的事：清掉 `github.dev` 的 cookies 和 local site data。这样即使再次打开，它也更可能回到需要确认或登录的初始状态，而不是安静地带着旧上下文往下走。
+
+第三步，检查 GitHub 授权。
+
+去 GitHub 的 settings 里看 OAuth Apps、GitHub Apps、Personal access tokens、fine-grained tokens。重点看三个问题：
+
+1. 有没有你不认识的 app？
+2. 有没有权限过大的 token？
+3. 有没有长期不用但仍然有效的授权？
+
+第四步，轮换高权限 token。
+
+如果你已经运行过 PoC，或有理由相信 token 可能暴露，别纠结模型怎么判断。先轮换。尤其是有 repo、workflow、package、admin 相关权限的 token。
+
+第五步，看仓库活动。
+
+检查最近是否有异常 push、branch、release、workflow 修改、webhook、deploy key、GitHub App 授权变更。个人账号没有企业安全平台，也可以先靠 GitHub audit / security 页面和仓库事件记录做一轮人工核对。
+
+第六步，再让 AI 帮你整理。
+
+你可以把脱敏后的检查结果交给 AI，让它帮你生成一张表：检查项、证据、结论、下一步。但不要把真实 token、私钥、完整 cookie、完整敏感日志贴进去。AI 可以帮你做病历，不能替你保管钥匙。
+
+## 企业怎么排查：照这条线走，不容易漏
+
+企业遇到类似 Red Hat npm 事件，最容易犯的错是上来就“全仓搜一下包名”。
+
+搜包名当然要做，但它只是第二步。真正的排查应该像事故现场勘查，先控场，再采证，再判断影响面，最后修复和预防。
+
+下面这条线可以直接变成内部 runbook。
+
+**第一步：冻结入口。**
+
+先暂停受影响范围内的自动依赖升级、自动 release、自动镜像构建。不是所有流水线都要一刀切停掉，但任何会执行安装脚本、发布包、构建制品、推镜像的路径，都应该先进入受控状态。
+
+**第二步：确认命中。**
+
+全仓库查 `package.json`、`package-lock.json`、`pnpm-lock.yaml`、`yarn.lock`、`bun.lockb`。不要只查直接依赖。npm 的风险常常藏在 transitive dependency 里。输出一张表：包名、版本、所在仓库、文件路径、直接或间接依赖、证据。
+
+**第三步：固定证据。**
+
+先别急着改 lockfile。保存当前 commit SHA、lockfile、CI run id、runner 镜像、安装命令、package registry URL、artifact digest、container image digest。很多事故到最后说不清，就是因为一开始太急着修，把现场擦掉了。
+
+**第四步：看安装行为。**
+
+对命中的包做静态检查，先不要执行。重点看 `preinstall`、`install`、`postinstall`、`prepare`。如果看到大体积根目录 JS、混淆代码、`eval`、编码数组、环境变量读取、`/proc` 访问、home 目录扫描、云 metadata endpoint、异常出网，就要把它当成高风险证据。
+
+**第五步：判定影响面。**
+
+列出所有可能执行过 install 的位置：开发机、CI runner、release job、Docker build、内部 registry mirror、缓存层、制品仓库。每个位置再列可触达凭证：GitHub token、npm token、AWS/GCP/Azure、Kubernetes、Vault、SSH key、Docker registry token、CircleCI token。
+
+**第六步：按优先级轮换。**
+
+如果恶意 install 已经在某个环境跑过，不要只轮换 npm token。攻击者拿到的可能是整条交付链的钥匙。优先处理高权限、可横向移动、可发布制品、可改 workflow 的凭证。轮换后还要验证旧凭证不可用，并查审计日志里有没有暴露后的异常使用。
+
+**第七步：清理和重建。**
+
+删除污染缓存，重建干净镜像，重新发布干净制品。检查有没有新增或修改过的 GitHub workflow、deploy key、webhook、GitHub App、OAuth App、branch protection。供应链攻击经常不满足于偷一次钥匙，它会试图给自己留下一条下次还能回来的路。
+
+**第八步：恢复前验证。**
+
+恢复流水线前，至少确认四件事：受影响版本从 lockfile 消失；缓存和镜像不再引用污染包；可能暴露的凭证已经轮换；clean build 真的跑过。没有这四项，恢复只是祈祷。
+
+**第九步：补上治未病的护栏。**
+
+这一步最容易被跳过，也最重要。
+
+企业应该考虑引入 package cooldown：刚发布的新版本先等一段时间再进入内部构建。很多恶意包的窗口期只有几个小时，冷却期能挡住一批“刚上架就中招”的事故。
+
+再往前，是内部 registry 或 proxy，锁文件变更审查，安装脚本审计，CI 出网监控，secret scanning，短生命周期凭证，最小权限 runner，OIDC 发布策略限制到 repo、branch、tag、workflow、environment。
+
+这些东西看起来没有“找到漏洞”那么有戏剧性，但它们才是扁鹊长兄做的事。
+
+## 披露不是终点，修补也不是终点
+
+我以前看安全文章，很容易被“谁发现了什么”吸引。现在反而更关心后半段：这件事被说出来之后，普通开发者和企业到底怎么接住。
+
+因为披露不是终点。披露只是把灯打开。
+
+灯打开以后，桌上会同时出现好几种材料：有人把攻击链讲清楚，有人在 issue 里追踪产品边界，有厂商发出克制的安全公告，有安全团队列出受影响版本和运行时行为。它们看起来分散，但对企业来说不能分散处理。否则安全同事读完一篇文章，平台同事另开一个工单，研发同事只升级了一个包，最后每个人都做了事，却没人能回答“我们到底有没有恢复干净”。
+
+我更希望它们被接成同一条流程：
+
+1. 披露材料进入情报队列。
+2. AI 摘要提取包名、版本、时间、入口、IoC。
+3. 资产系统查仓库、lockfile、CI、镜像、开发机。
+4. 安全团队验证证据，不把“模型说可能”当结论。
+5. 平台团队轮换凭证、清缓存、重建制品。
+6. 工程团队提交修复 PR。
+7. 治理团队补上策略，防止下一次同类路径。
+
+AI 可以参与每一步，但不能替代每一步的责任人。
+
+它可以写查询，可以读 lockfile，可以总结恶意脚本，可以生成轮换清单，可以写事故报告初稿。可最后还是要有人确认：这台 runner 真的跑过吗？这个 token 真的失效了吗？这个镜像真的重建了吗？这个 workflow 真的是我们加的吗？
+
+这就是“实证”的意思。
+
+不是看起来像安全，不是说法上很完整，而是每个结论下面都有证据。
+
+## 附件：给 AI 的一份治未病 Skill
+
+我把上面的排查流程整理成了一份完整的 AI skill。正文不展开，因为太长，会破坏阅读节奏。
+
+<Callout title="附件：供应链事故排查 Skill">
+
+如果你怀疑自己的仓库、CI、开发机或制品受到了 GitHub token 泄露、恶意 npm 包、CI/CD 凭证泄露等影响，可以下载这份排查 Skill，让 AI 按步骤帮你收集证据、判断影响面、生成修复清单。
+
+- [下载 Skill 包](/downloads/supply-chain-incident-triage.skill.zip)
+- [查看 Markdown 版排查指南](/downloads/supply-chain-incident-triage.md)
+
+请注意：不要把真实 token、私钥、密码、cookie 或完整敏感日志粘贴给外部 AI。
+
+</Callout>
+
+这个 skill 的设计原则很简单：
+
+先问环境，不假设；先保现场，不急着改；先看证据，不急着下结论；先轮换钥匙，再讨论谁的责任；最后把一次救火变成下一次的预防。
+
+说到底，AI native 时代的安全不该只是“让 AI 帮我发现更多漏洞”。
+
+漏洞越来越容易被发现之后，稀缺的东西会变成另外几样：可信证据、明确责任、快速修补、可验证的恢复，以及能挡住下一次的制度。
+
+扁鹊当然重要。
+
+但如果一个组织每次都要等扁鹊出手，说明它的病已经拖得太久了。
+
+真正值得追求的是，让更多问题停在“未有形而除之”的阶段。没有惊天动地的抢救，没有半夜三点的轮换，没有“我们到底有没有中招”的恐慌。
+
+只有一条安静但可靠的证据链，在坏事长成之前，把它按住。
+
+## 参考资料
+
+- Ammar Askar, [1-Click GitHub Token Stealing via a VSCode Bug](https://blog.ammaraskar.com/github-token-stealing/), 2026.
+- Microsoft VS Code, [Security: Webviews can trigger arbitrary keyboard shortcuts in the main workbench #319593](https://github.com/microsoft/vscode/issues/319593), 2026.
+- Red Hat, [RHSB-2026-006: Supply chain compromise of @redhat-cloud-services npm packages](https://access.redhat.com/security/vulnerabilities/RHSB-2026-006), 2026.
+- StepSecurity, [Multiple redhat-cloud-services npm Packages compromised](https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-packages-compromised), 2026.
+- RedHatInsights, [[SECURITY]: Malicious npm releases detected across @redhat-cloud-services/ scope #492](https://github.com/RedHatInsights/javascript-clients/issues/492), 2026.
+- 中国哲学书电子化计划, [《鹖冠子·世贤》](https://ctext.org/he-guan-zi/shi-xian/zh).
