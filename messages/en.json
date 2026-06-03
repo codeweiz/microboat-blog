@@ -8,9 +8,9 @@
 		}
 	},
 	"home": {
-		"badge": "Microboat's working notes",
-		"title": "Writing down the questions that keep coming back in real projects.",
-		"intro": "This is where I keep the problems that do not go away: how AI tools fit into daily work, where system boundaries hold, and how developer tools shape judgment. Clear thoughts become essays; unfinished ones stay open.",
+		"badge": "Microboat",
+		"title": "Notes taking shape between code, tools, and people.",
+		"intro": "Some questions keep returning after a project is over: how a command changes a workflow, how a boundary reveals a system's character, and how new tools change human judgment. I keep those traces here.",
 		"cta": "Read posts",
 		"latest": "Latest posts",
 		"viewAll": "View all"
@@ -42,11 +42,11 @@
 	"about": {
 		"title": "About",
 		"heading": "Microboat",
-		"intro": "This is where I keep essays and notes from building projects, reading source code, and working through tools.",
+		"intro": "This is closer to a half-open studio: some essays are polished, some judgments still have rough edges.",
 		"paragraphs": [
-			"I am not trying to make this place perform as a resume. I mostly write to make recurring questions clearer: why systems fail in a certain shape, why tools are designed the way they are, and which part of a workflow AI actually changes.",
-			"Some posts are complete essays. Some are provisional judgment. If later project work proves an older thought wrong, I would rather revise it than let it sit there pretending to be finished.",
-			"You can begin with the newest posts or follow tags into nearby topics. Start wherever something feels useful."
+			"I am Microboat. I spend my days writing code, shaping systems, studying tools, and being corrected by all three.",
+			"I am drawn to questions that still smell like the workshop: why an abstraction saves you, why a button misleads you, and why stronger automation makes human judgment matter more.",
+			"If something here gives you a usable thought, or simply sends you back to your own problem with better eyes, the site is doing its job."
 		],
 		"elsewhere": "Elsewhere"
 	},

@@ -1,22 +1,45 @@
 import { ArrowUpRight } from "lucide-react";
 import { Link as I18nLink } from "@/i18n/navigation";
 import type { BlogPost } from "@/lib/posts";
+import { KnowledgeLineageGraph } from "./knowledge-lineage-graph";
 
-const conceptPositions = [
-	{ x: 18, y: 24 },
-	{ x: 42, y: 16 },
-	{ x: 70, y: 24 },
-	{ x: 28, y: 74 },
-	{ x: 62, y: 80 },
+type LineageNode = {
+	id: string;
+	kind: "concept" | "post";
+	label: string;
+	slug?: string;
+	image?: string;
+	date?: string;
+	count?: number;
+	x: number;
+	y: number;
+};
+
+type LineageEdge = {
+	id: string;
+	from: string;
+	to: string;
+	relation: "concept" | "link" | "series";
+};
+
+const conceptSlots = [
+	{ x: 14, y: 22 },
+	{ x: 42, y: 12 },
+	{ x: 76, y: 20 },
+	{ x: 91, y: 52 },
+	{ x: 70, y: 88 },
+	{ x: 36, y: 86 },
+	{ x: 9, y: 60 },
 ];
 
-const postPositions = [
-	{ x: 24, y: 42 },
-	{ x: 48, y: 34 },
-	{ x: 76, y: 48 },
-	{ x: 32, y: 64 },
-	{ x: 56, y: 62 },
-	{ x: 82, y: 72 },
+const postSlots = [
+	{ x: 25, y: 36 },
+	{ x: 51, y: 30 },
+	{ x: 76, y: 42 },
+	{ x: 33, y: 61 },
+	{ x: 57, y: 61 },
+	{ x: 82, y: 70 },
+	{ x: 18, y: 77 },
 ];
 
 function labelFromSlug(value: string) {
@@ -38,7 +61,7 @@ export function KnowledgeLineage({
 	posts: BlogPost[];
 	locale: string;
 }) {
-	const visiblePosts = posts.slice(0, postPositions.length);
+	const visiblePosts = posts.slice(0, postSlots.length);
 	const conceptCounts = new Map<string, number>();
 
 	for (const post of visiblePosts) {
@@ -52,18 +75,76 @@ export function KnowledgeLineage({
 		count,
 	}))
 		.sort((a, b) => b.count - a.count || a.concept.localeCompare(b.concept))
-		.slice(0, conceptPositions.length);
+		.slice(0, conceptSlots.length);
 
 	if (visiblePosts.length === 0 || concepts.length === 0) {
 		return null;
 	}
 
+	const conceptNodes: LineageNode[] = concepts.map(
+		({ concept, count }, index) => ({
+			id: `concept:${concept}`,
+			kind: "concept",
+			label: labelFromSlug(concept),
+			count,
+			...conceptSlots[index],
+		}),
+	);
+	const postNodes: LineageNode[] = visiblePosts.map((post, index) => ({
+		id: `post:${post.slug}`,
+		kind: "post",
+		label: post.title,
+		slug: post.slug,
+		image: post.image,
+		date: post.createdAt.toLocaleDateString(locale, {
+			month: "short",
+			day: "numeric",
+		}),
+		...postSlots[index],
+	}));
+	const visibleSlugs = new Set(visiblePosts.map((post) => post.slug));
+	const conceptEdges: LineageEdge[] = visiblePosts.flatMap((post) =>
+		concepts
+			.filter(({ concept }) => postConcepts(post).includes(concept))
+			.slice(0, 3)
+			.map(({ concept }) => ({
+				id: `concept:${concept}->post:${post.slug}`,
+				from: `concept:${concept}`,
+				to: `post:${post.slug}`,
+				relation: "concept" as const,
+			})),
+	);
+	const postEdges: LineageEdge[] = visiblePosts.flatMap((post) => {
+		const linked = (post.links ?? [])
+			.filter((slug) => visibleSlugs.has(slug))
+			.map((slug) => ({
+				id: `post:${post.slug}->post:${slug}:link`,
+				from: `post:${post.slug}`,
+				to: `post:${slug}`,
+				relation: "link" as const,
+			}));
+		const sameSeries = visiblePosts
+			.filter(
+				(candidate) =>
+					candidate.slug !== post.slug &&
+					post.series &&
+					candidate.series === post.series,
+			)
+			.slice(0, 1)
+			.map((candidate) => ({
+				id: `post:${post.slug}->post:${candidate.slug}:series`,
+				from: `post:${post.slug}`,
+				to: `post:${candidate.slug}`,
+				relation: "series" as const,
+			}));
+		return [...linked, ...sameSeries];
+	});
 	const copy =
 		locale === "zh"
-			? { kicker: "知识谱系", title: "知识谱系", all: "全部文章" }
+			? { kicker: "知识谱系", title: "文章之间的暗线", all: "全部文章" }
 			: {
 					kicker: "Knowledge lineage",
-					title: "Knowledge lineage",
+					title: "The lines between posts",
 					all: "All posts",
 				};
 
@@ -85,88 +166,11 @@ export function KnowledgeLineage({
 						<ArrowUpRight className="h-3.5 w-3.5" />
 					</I18nLink>
 				</div>
-
-				<div className="relative mt-5 min-h-[520px] overflow-hidden rounded-lg border bg-card/55 shadow-sm md:min-h-[450px]">
-					<div className="absolute inset-0 bg-[linear-gradient(to_right,currentColor_1px,transparent_1px),linear-gradient(to_bottom,currentColor_1px,transparent_1px)] bg-[size:48px_48px] text-border/35" />
-					<svg
-						className="absolute inset-0 h-full w-full text-primary/50"
-						viewBox="0 0 100 100"
-						preserveAspectRatio="none"
-					>
-						<title>Knowledge lineage connections</title>
-						{visiblePosts.flatMap((post, postIndex) => {
-							const matched = concepts.filter(({ concept }) =>
-								postConcepts(post).includes(concept),
-							);
-							const postPosition = postPositions[postIndex];
-							return matched.slice(0, 3).map(({ concept }) => {
-								const conceptIndex = concepts.findIndex(
-									(entry) => entry.concept === concept,
-								);
-								const conceptPosition = conceptPositions[conceptIndex];
-								return (
-									<line
-										key={`${post.slug}-${concept}`}
-										x1={conceptPosition.x}
-										y1={conceptPosition.y}
-										x2={postPosition.x}
-										y2={postPosition.y}
-										stroke="currentColor"
-										strokeWidth="0.22"
-										vectorEffect="non-scaling-stroke"
-									/>
-								);
-							});
-						})}
-					</svg>
-
-					{concepts.map(({ concept, count }, index) => {
-						const position = conceptPositions[index];
-						return (
-							<div
-								key={concept}
-								className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border bg-background/90 px-3 py-1.5 text-xs shadow-sm backdrop-blur"
-								style={{ left: `${position.x}%`, top: `${position.y}%` }}
-							>
-								<span>{labelFromSlug(concept)}</span>
-								<sup className="ml-1 text-muted-foreground">{count}</sup>
-							</div>
-						);
-					})}
-
-					{visiblePosts.map((post, index) => {
-						const position = postPositions[index];
-						return (
-							<I18nLink
-								key={post.slug}
-								href={`/blog/${post.slug}`}
-								className="group absolute w-[min(16rem,70vw)] -translate-x-1/2 -translate-y-1/2 rounded-lg border bg-background/92 p-2.5 shadow-sm backdrop-blur transition-all hover:-translate-y-[calc(50%+2px)] hover:border-primary/50 hover:shadow-md"
-								style={{ left: `${position.x}%`, top: `${position.y}%` }}
-							>
-								<div className="flex gap-3">
-									{post.image ? (
-										<img
-											src={post.image}
-											alt=""
-											className="h-12 w-16 shrink-0 rounded-md border object-cover"
-										/>
-									) : null}
-									<div className="min-w-0">
-										<h3 className="line-clamp-2 text-sm font-semibold leading-snug group-hover:underline">
-											{post.title}
-										</h3>
-										<time className="mt-1 block text-[11px] text-muted-foreground tabular-nums">
-											{post.createdAt.toLocaleDateString(locale, {
-												month: "short",
-												day: "numeric",
-											})}
-										</time>
-									</div>
-								</div>
-							</I18nLink>
-						);
-					})}
-				</div>
+				<KnowledgeLineageGraph
+					nodes={[...conceptNodes, ...postNodes]}
+					edges={[...conceptEdges, ...postEdges]}
+					locale={locale}
+				/>
 			</div>
 		</section>
 	);
