@@ -19,7 +19,10 @@ export function ContentGraph({
 	post: BlogPost;
 	posts: BlogPost[];
 }) {
-	const graph = getGraphForPost(post as KnowledgePost, posts as KnowledgePost[]);
+	const graph = getGraphForPost(
+		post as KnowledgePost,
+		posts as KnowledgePost[],
+	);
 	const visibleNodes = graph.nodes.slice(0, positions.length);
 	const nodePositions = new Map(
 		visibleNodes.map((node, index) => [node.slug, positions[index]]),
@@ -42,7 +45,11 @@ export function ContentGraph({
 			</h2>
 			<div className="mt-5 grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
 				<div className="relative min-h-[360px] overflow-hidden rounded-lg border bg-muted/20">
-					<svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100">
+					<svg
+						aria-hidden="true"
+						className="absolute inset-0 h-full w-full"
+						viewBox="0 0 100 100"
+					>
 						{visibleEdges.map((edge) => {
 							const from = nodePositions.get(edge.from);
 							const to = nodePositions.get(edge.to);
@@ -90,7 +97,9 @@ export function ContentGraph({
 					<ul className="mt-3 space-y-3">
 						{visibleEdges.slice(0, 8).map((edge) => {
 							const target = graph.nodes.find((node) => node.slug === edge.to);
-							const source = graph.nodes.find((node) => node.slug === edge.from);
+							const source = graph.nodes.find(
+								(node) => node.slug === edge.from,
+							);
 							return (
 								<li
 									key={`${edge.from}-${edge.to}-${edge.relation}-label`}
@@ -99,7 +108,10 @@ export function ContentGraph({
 									<span className="font-medium text-foreground">
 										{source?.title}
 									</span>{" "}
-									→ <span className="font-medium text-foreground">{target?.title}</span>
+									→{" "}
+									<span className="font-medium text-foreground">
+										{target?.title}
+									</span>
 									<br />
 									<span>{edge.reason}</span>
 								</li>

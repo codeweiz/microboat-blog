@@ -16,7 +16,10 @@ function addReason(reasons: Set<string>, reason: string) {
 	}
 }
 
-function lexicalSimilarity(source: KnowledgePost, candidate: KnowledgePost): number {
+function lexicalSimilarity(
+	source: KnowledgePost,
+	candidate: KnowledgePost,
+): number {
 	const sourceTerms = new Set(
 		[
 			source.title,
@@ -82,7 +85,10 @@ export function getNextReads(
 					typeof post.seriesOrder === "number" &&
 					typeof candidate.seriesOrder === "number"
 				) {
-					score += Math.max(0, 8 - Math.abs(post.seriesOrder - candidate.seriesOrder));
+					score += Math.max(
+						0,
+						8 - Math.abs(post.seriesOrder - candidate.seriesOrder),
+					);
 				}
 			}
 

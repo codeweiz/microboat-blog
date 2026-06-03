@@ -6,13 +6,15 @@ import { cn } from "@/lib/utils";
 
 type ImageWrapperSrc = string | Blob | { src: string };
 
-const ImageWrapper = ({ src, alt }: { src?: ImageWrapperSrc; alt?: string }) => {
+const ImageWrapper = ({
+	src,
+	alt,
+}: {
+	src?: ImageWrapperSrc;
+	alt?: string;
+}) => {
 	const resolvedSrc =
-		typeof src === "string"
-			? src
-			: src && "src" in src
-				? src.src
-				: null;
+		typeof src === "string" ? src : src && "src" in src ? src.src : null;
 
 	if (!resolvedSrc) {
 		return null;

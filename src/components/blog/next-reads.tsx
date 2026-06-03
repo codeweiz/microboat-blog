@@ -27,7 +27,10 @@ export function NextReads({ reads }: { reads: NextRead[] }) {
 					>
 						<div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
 							{reasons.slice(0, 3).map((reason) => (
-								<span key={reason} className="rounded border bg-background px-2 py-1">
+								<span
+									key={reason}
+									className="rounded border bg-background px-2 py-1"
+								>
 									{reason}
 								</span>
 							))}

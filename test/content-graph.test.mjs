@@ -69,9 +69,10 @@ const posts = [
 test("normalizes optional post metadata with useful defaults", () => {
 	assert.equal(getPostType({}), "essay");
 	assert.equal(getPostStage({}), "budding");
-	assert.deepEqual(getPostConcepts({ concepts: ["AI Tools", "ai-tools", ""] }), [
-		"ai-tools",
-	]);
+	assert.deepEqual(
+		getPostConcepts({ concepts: ["AI Tools", "ai-tools", ""] }),
+		["ai-tools"],
+	);
 });
 
 test("builds explicit graph edges with relation labels", () => {
@@ -104,7 +105,9 @@ test("local graph includes explicit, backlink, series, and shared concept relati
 	assert.ok(relations.includes("backlink"));
 	assert.ok(relations.includes("series"));
 	assert.ok(relations.includes("concept"));
-	assert.ok(graph.nodes.some((node) => node.slug === "agent-toolchain-security"));
+	assert.ok(
+		graph.nodes.some((node) => node.slug === "agent-toolchain-security"),
+	);
 });
 
 test("next reads rank explainable explicit and backlink relations first", () => {
