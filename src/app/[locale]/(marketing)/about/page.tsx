@@ -1,4 +1,4 @@
-import { BookOpen, Github, Network, Rss } from "lucide-react";
+import { Github, Rss } from "lucide-react";
 import type { Metadata } from "next";
 import type { Locale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -23,53 +23,17 @@ export default async function AboutPage({
 	setRequestLocale(locale);
 	const t = await getTranslations("about");
 	const paragraphs = t.raw("paragraphs") as string[];
-	const cards =
-		locale === "zh"
-			? [
-					{
-						title: "Start Here",
-						body: "新读者应该从入口文章开始，而不是直接面对原始时间线。",
-						icon: BookOpen,
-					},
-					{
-						title: "Concept Graph",
-						body: "研究一个主题时，顺着概念、反向链接和系列路径继续走。",
-						icon: Network,
-					},
-					{
-						title: "Living Notes",
-						body: "文章带着阶段、更新原因和关联阅读，所以发布之后还能继续生长。",
-						icon: Rss,
-					},
-				]
-			: [
-					{
-						title: "Start Here",
-						body: "New readers should begin with entry essays rather than a raw timeline.",
-						icon: BookOpen,
-					},
-					{
-						title: "Concept Graph",
-						body: "Follow concepts, backlinks, and series paths when researching a topic.",
-						icon: Network,
-					},
-					{
-						title: "Living Notes",
-						body: "Posts carry stages, update reasons, and connected reads so they can keep growing.",
-						icon: Rss,
-					},
-				];
 
 	return (
 		<section className="px-6 pt-32 pb-20">
-			<div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[0.75fr_1.25fr]">
+			<div className="mx-auto grid w-full max-w-5xl gap-12 lg:grid-cols-[0.72fr_1.28fr]">
 				<aside className="lg:sticky lg:top-28 lg:self-start">
 					<p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
-						About this site
+						About
 					</p>
 					<h1 className="mt-3 font-serif text-4xl font-semibold md:text-5xl">
-					{t("heading")}
-				</h1>
+						{t("heading")}
+					</h1>
 					<p className="mt-5 text-lg leading-8 text-muted-foreground">
 						{t("intro")}
 					</p>
@@ -93,28 +57,11 @@ export default async function AboutPage({
 					</div>
 				</aside>
 
-				<div>
-					<div className="space-y-5 font-serif text-[1.08rem] leading-9">
-					{paragraphs.map((paragraph) => (
-						<p key={paragraph}>{paragraph}</p>
-					))}
-				</div>
-
-					<div className="mt-10 grid gap-4 md:grid-cols-3">
-						{cards.map((card) => {
-							const Icon = card.icon;
-							return (
-								<div key={card.title} className="rounded-lg border bg-muted/20 p-5">
-									<Icon className="h-5 w-5 text-primary" />
-									<h2 className="mt-4 font-serif text-xl font-semibold">
-										{card.title}
-									</h2>
-									<p className="mt-2 text-sm leading-6 text-muted-foreground">
-										{card.body}
-									</p>
-								</div>
-							);
-						})}
+				<div className="max-w-2xl">
+					<div className="space-y-6 font-serif text-[1.12rem] leading-9">
+						{paragraphs.map((paragraph) => (
+							<p key={paragraph}>{paragraph}</p>
+						))}
 					</div>
 				</div>
 			</div>

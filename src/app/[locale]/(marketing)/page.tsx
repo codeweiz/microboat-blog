@@ -1,39 +1,26 @@
-import { ArrowRight, Github, Network, Rss } from "lucide-react";
+import { ArrowRight, Github, Rss } from "lucide-react";
 import type { Locale } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
-import { KnowledgeMap } from "@/components/home/knowledge-map";
-import { LivingNotes } from "@/components/home/living-notes";
-import { StartHere } from "@/components/home/start-here";
 import { Button } from "@/components/ui/button";
 import { Link as I18nLink } from "@/i18n/navigation";
-import {
-	getConceptClusters,
-	getPostsByLocale,
-	getRecentlyUpdatedPosts,
-	getStartHerePosts,
-} from "@/lib/posts";
+import { getPostsByLocale } from "@/lib/posts";
 
 export default async function Home() {
 	const locale = (await getLocale()) as Locale;
 	const t = await getTranslations("home");
 
 	const posts = getPostsByLocale(locale);
-	const startHere = getStartHerePosts(locale, 5);
-	const clusters = getConceptClusters(locale, 8);
-	const livingNotes = getRecentlyUpdatedPosts(locale, 4);
-	const latest = posts.slice(0, 4);
-	const heroPost = startHere[0] ?? posts[0];
+	const latest = posts.slice(0, 6);
+	const heroPost = latest[0];
 
 	return (
 		<>
-			<section className="px-6 pt-28 pb-14">
-				<div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
+			<section className="px-6 pt-28 pb-12">
+				<div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.86fr_1.14fr] lg:items-center">
 					<div>
-						<span className="inline-flex rounded-md border border-border/70 bg-background/70 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-primary shadow-sm backdrop-blur">
-							{t("badge")}
-						</span>
+						<span className="text-sm text-muted-foreground">{t("badge")}</span>
 
-						<h1 className="mt-6 max-w-3xl font-serif text-5xl font-semibold leading-[1.05] tracking-normal md:text-6xl">
+						<h1 className="mt-5 max-w-3xl font-serif text-5xl font-semibold leading-[1.05] tracking-normal md:text-6xl">
 							{t("title")}
 						</h1>
 
@@ -46,12 +33,6 @@ export default async function Home() {
 								<I18nLink href="/blog">
 									{t("cta")}
 									<ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-								</I18nLink>
-							</Button>
-							<Button asChild size="lg" variant="outline">
-								<I18nLink href="/blog#knowledge-map">
-									<Network className="mr-1 h-4 w-4" />
-									{t("mapCta")}
 								</I18nLink>
 							</Button>
 						</div>
@@ -85,10 +66,6 @@ export default async function Home() {
 					) : null}
 				</div>
 			</section>
-
-			<StartHere posts={startHere} locale={locale} />
-			<KnowledgeMap clusters={clusters} locale={locale} />
-			<LivingNotes posts={livingNotes.length ? livingNotes : latest} locale={locale} />
 
 			<section className="px-6 pb-24">
 				<div className="mx-auto max-w-6xl">

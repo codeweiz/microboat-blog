@@ -18,7 +18,7 @@ export const getMessagesForLocale = async (
 		appConfig.i18n.defaultLocale,
 	);
 	return deepmerge(defaultLocaleMessages, localeMessages, {
-		// Arrays in messages (e.g. home.stack) represent locale-specific
+		// Arrays in messages (e.g. about.paragraphs) represent locale-specific
 		// content — the localized version must replace the default, not concat.
 		arrayMerge: (_target, source) => source,
 	});

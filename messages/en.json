@@ -9,37 +9,20 @@
 	},
 	"home": {
 		"badge": "Microboat's working notes",
-		"title": "Writing down what actually survives engineering work.",
-		"intro": "I write about AI toolchains, infrastructure, developer tools, and the tradeoffs inside software systems. Not tutorials, not news summaries; more like working notes that slowly connect.",
+		"title": "Writing down the questions that keep coming back in real projects.",
+		"intro": "This is where I keep the problems that do not go away: how AI tools fit into daily work, where system boundaries hold, and how developer tools shape judgment. Clear thoughts become essays; unfinished ones stay open.",
 		"cta": "Read posts",
-		"mapCta": "Browse topics",
 		"latest": "Latest posts",
-		"viewAll": "View all",
-		"principlesTitle": "Current threads",
-		"principles": [
-			"AI is changing not only code generation, but toolchains, permissions, and collaboration surfaces.",
-			"The hard part of system design is often recovery, auditability, and boundaries rather than choosing a tool.",
-			"A good post should not go inert after publication; new projects should keep testing old judgment."
-		],
-		"stack": [
-			"backend",
-			"frontend",
-			"infra",
-			"data",
-			"ai",
-			"design systems",
-			"devtools"
-		]
+		"viewAll": "View all"
 	},
 	"navigation": {
 		"home": "Home",
 		"blog": "Blog",
-		"tags": "Tags",
 		"about": "About"
 	},
 	"blog": {
 		"title": "Blog",
-		"description": "Long-form notes on what I'm building and learning.",
+		"description": "A chronological view of the writing here, newest first, older pieces still visible.",
 		"keywords": "blog, engineering, full-stack, infra, devtools"
 	},
 	"post": {
@@ -51,7 +34,7 @@
 	},
 	"tags": {
 		"title": "Tags",
-		"description": "Browse posts by topic.",
+		"description": "Tags are a lightweight index for moving from one post to nearby topics.",
 		"taggedWith": "Posts tagged “{tag}”",
 		"postCount": "{count, plural, one {# post} other {# posts}}",
 		"allTags": "All tags"
@@ -59,11 +42,11 @@
 	"about": {
 		"title": "About",
 		"heading": "Microboat",
-		"intro": "I use this site to make engineering judgment visible: the tradeoffs behind tools, the failure modes behind systems, and notes that keep growing with experience.",
+		"intro": "This is where I keep essays and notes from building projects, reading source code, and working through tools.",
 		"paragraphs": [
-			"This site is not a resume and not a chronological diary. It is a public engineering knowledge system for AI toolchains, infrastructure, developer experience, organizational learning, and long-lived system design.",
-			"I care more about why a design holds than which technology was used. A post that only records a conclusion expires quickly; a post that records the path of judgment can remain useful when the next similar problem appears.",
-			"If this is your first visit, start with Start Here. If you are researching a topic, follow topics, concepts, backlinks, and the local graph. The site runs on Next.js, MDX, and Cloudflare Workers."
+			"I am not trying to make this place perform as a resume. I mostly write to make recurring questions clearer: why systems fail in a certain shape, why tools are designed the way they are, and which part of a workflow AI actually changes.",
+			"Some posts are complete essays. Some are provisional judgment. If later project work proves an older thought wrong, I would rather revise it than let it sit there pretending to be finished.",
+			"You can begin with the newest posts or follow tags into nearby topics. Start wherever something feels useful."
 		],
 		"elsewhere": "Elsewhere"
 	},
