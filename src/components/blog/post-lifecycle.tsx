@@ -11,50 +11,36 @@ export function PostLifecycle({
 	className?: string;
 }) {
 	const updated = post.updatedAt.getTime() > post.createdAt.getTime();
+	const date = updated ? post.updatedAt : post.createdAt;
 
 	return (
-		<section
+		<div
 			className={cn(
-				"grid gap-3 rounded-lg border bg-muted/20 p-4 text-sm md:grid-cols-2",
+				"mt-4 flex flex-wrap items-center gap-x-2 gap-y-2 text-sm text-muted-foreground",
 				className,
 			)}
 		>
-			<div>
-				<div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
-					Lifecycle
-				</div>
-				<div className="mt-2 flex flex-wrap gap-2">
-					<span className="rounded border bg-background/70 px-2 py-1 uppercase">
-						{post.type}
+			<span>{post.type}</span>
+			<span aria-hidden>·</span>
+			<span>{post.stage}</span>
+			{post.series ? (
+				<>
+					<span aria-hidden>·</span>
+					<span>
+						{post.series}
+						{post.seriesOrder ? ` #${post.seriesOrder}` : ""}
 					</span>
-					<span className="rounded border bg-background/70 px-2 py-1">
-						{post.stage}
-					</span>
-					{post.series && (
-						<span className="rounded border bg-background/70 px-2 py-1">
-							{post.series}
-							{post.seriesOrder ? ` #${post.seriesOrder}` : ""}
-						</span>
-					)}
-				</div>
-			</div>
-			<div>
-				<div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
-					{updated ? "Updated" : "Published"}
-				</div>
-				<p className="mt-2 text-muted-foreground">
-					{(updated ? post.updatedAt : post.createdAt).toLocaleDateString(locale, {
-						year: "numeric",
-						month: "long",
-						day: "numeric",
-					})}
-				</p>
-				{post.updatedReason && (
-					<p className="mt-2 leading-6 text-muted-foreground">
-						{post.updatedReason}
-					</p>
-				)}
-			</div>
-		</section>
+				</>
+			) : null}
+			<span aria-hidden>·</span>
+			<span>
+				{updated ? "updated" : "published"}{" "}
+				{date.toLocaleDateString(locale, {
+					year: "numeric",
+					month: "short",
+					day: "numeric",
+				})}
+			</span>
+		</div>
 	);
 }

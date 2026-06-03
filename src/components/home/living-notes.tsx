@@ -3,15 +3,15 @@ import type { BlogPost } from "@/lib/posts";
 
 const copy = {
 	zh: {
-		kicker: "Living notes",
-		title: "文章发布之后，还应该继续生长。",
-		body: "这里优先展示最近被修订、重新连接或值得回看的文章。更新日期只有在说明“为什么更新”时才有意义。",
+		kicker: "最近更新",
+		title: "有些旧文章，会被新的项目重新照亮。",
+		body: "这里放最近修订或重新连接过的文章。不是为了制造动态，只是保留判断被更新的痕迹。",
 		updated: "更新于",
 	},
 	en: {
-		kicker: "Living notes",
-		title: "Posts should keep growing after publication.",
-		body: "This section highlights posts that were revised, reconnected, or are worth revisiting. Update dates matter when they explain what changed.",
+		kicker: "Recently updated",
+		title: "Some old posts get lit up again by new work.",
+		body: "A quiet place for revised or reconnected posts. Not activity for its own sake; just traces of judgment being updated.",
 		updated: "updated",
 	},
 };

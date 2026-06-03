@@ -8,18 +8,18 @@
 		}
 	},
 	"home": {
-		"badge": "Public knowledge system",
-		"title": "A working map for engineering judgment.",
-		"intro": "I write about AI toolchains, infrastructure, developer experience, and long-lived systems. Posts are not finished when they are published; they keep growing as new projects, failures, and evidence connect back to them.",
-		"cta": "Start reading",
-		"mapCta": "Explore the map",
+		"badge": "Microboat's working notes",
+		"title": "Writing down what actually survives engineering work.",
+		"intro": "I write about AI toolchains, infrastructure, developer tools, and the tradeoffs inside software systems. Not tutorials, not news summaries; more like working notes that slowly connect.",
+		"cta": "Read posts",
+		"mapCta": "Browse topics",
 		"latest": "Latest posts",
 		"viewAll": "View all",
-		"principlesTitle": "How to read this site",
+		"principlesTitle": "Current threads",
 		"principles": [
-			"If this is your first visit, start with Start Here rather than the latest post.",
-			"If you are researching a problem, follow topics, concepts, and backlinks.",
-			"If you care whether a post still holds up, check its stage, update reason, and connected reads."
+			"AI is changing not only code generation, but toolchains, permissions, and collaboration surfaces.",
+			"The hard part of system design is often recovery, auditability, and boundaries rather than choosing a tool.",
+			"A good post should not go inert after publication; new projects should keep testing old judgment."
 		],
 		"stack": [
 			"backend",

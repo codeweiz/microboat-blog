@@ -7,8 +7,6 @@ import {
 	getConceptClusters,
 	getFeaturedPosts,
 	getPostsByLocale,
-	getPostsByStage,
-	getPostsByType,
 	getStartHerePosts,
 	groupPostsByYearMonth,
 } from "@/lib/posts";
@@ -41,29 +39,21 @@ export default async function BlogPage({
 	const featured = getFeaturedPosts(locale, 3);
 	const startHere = getStartHerePosts(locale, 4);
 	const concepts = getConceptClusters(locale, 10);
-	const types = getPostsByType(locale);
-	const stages = getPostsByStage(locale);
 	const copy =
 		locale === "zh"
 			? {
-					kicker: "Research archive",
-					intro:
-						"文章可以按入口、概念、类型、成熟度和时间浏览。时间线还在，但它不再是唯一的地图。",
-					featured: "Featured",
-					startHere: "Start here",
-					concepts: "Concepts",
-					type: "Type",
-					stage: "Stage",
+					kicker: "文章",
+					featured: "最近比较想推荐的",
+					startHere: "从这里读起",
+					concepts: "常出现的话题",
+					archive: "按时间",
 				}
 			: {
-					kicker: "Research archive",
-					intro:
-						"Posts can be browsed by entry point, concept, type, maturity, and time. The timeline remains, but it is no longer the only map.",
-					featured: "Featured",
+					kicker: "Posts",
+					featured: "Worth starting with",
 					startHere: "Start here",
-					concepts: "Concepts",
-					type: "Type",
-					stage: "Stage",
+					concepts: "Recurring topics",
+					archive: "By date",
 				};
 
 	const monthName = (year: number, month: number) =>
@@ -72,21 +62,16 @@ export default async function BlogPage({
 	return (
 		<section className="px-6 pt-32 pb-20">
 			<div className="mx-auto w-full max-w-6xl">
-				<header className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr] lg:items-end">
+				<header>
 					<div>
 						<p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
 							{copy.kicker}
 						</p>
 						<h1 className="mt-3 font-serif text-4xl font-semibold md:text-5xl">
-						{t("title")}
-					</h1>
+							{t("title")}
+						</h1>
 						<p className="mt-4 max-w-2xl text-muted-foreground md:text-lg">
-						{t("description")}
-					</p>
-					</div>
-					<div className="rounded-lg border bg-muted/20 p-5">
-						<p className="text-sm leading-6 text-muted-foreground">
-							{copy.intro}
+							{t("description")}
 						</p>
 					</div>
 				</header>
@@ -98,28 +83,42 @@ export default async function BlogPage({
 						</h2>
 						<div className="mt-5 grid gap-4 md:grid-cols-3">
 							{featured.map((post) => (
-								<article key={post.slug} className="rounded-lg border bg-muted/20 p-5">
-									<div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-										<span className="rounded border px-1.5 py-0.5 uppercase">
-											{post.type}
-										</span>
-										<span>{post.stage}</span>
-									</div>
-									<h3 className="mt-3 font-serif text-xl font-semibold leading-snug">
-										<a href={`/${locale}/blog/${post.slug}`} className="hover:underline">
+								<article
+									key={post.slug}
+									className="overflow-hidden rounded-lg border bg-muted/20"
+								>
+									{post.image ? (
+										<img
+											src={post.image}
+											alt=""
+											className="aspect-[16/9] w-full object-cover"
+										/>
+									) : null}
+									<div className="p-5">
+										<div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+											<span>{post.type}</span>
+											<span>·</span>
+											<span>{post.stage}</span>
+										</div>
+										<h3 className="mt-3 font-serif text-xl font-semibold leading-snug">
+											<a
+												href={`/${locale}/blog/${post.slug}`}
+												className="hover:underline"
+											>
 											{post.title}
 										</a>
 									</h3>
-									<p className="mt-2 line-clamp-3 text-sm leading-6 text-muted-foreground">
-										{post.description}
-									</p>
+										<p className="mt-2 line-clamp-3 text-sm leading-6 text-muted-foreground">
+											{post.description}
+										</p>
+									</div>
 								</article>
 							))}
 						</div>
 					</section>
 				)}
 
-				<section id="knowledge-map" className="mt-14 grid gap-8 lg:grid-cols-[1fr_1fr]">
+				<section id="knowledge-map" className="mt-14 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
 					<div>
 						<h2 className="font-serif text-2xl font-semibold">
 							{copy.startHere}
@@ -148,38 +147,11 @@ export default async function BlogPage({
 								</a>
 							))}
 						</div>
-						<div className="mt-8 grid gap-3 sm:grid-cols-2">
-							{types.map(({ type, posts: typePosts }) => (
-								<div key={type} className="rounded-lg border bg-background/70 p-4">
-									<div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
-										{copy.type}
-									</div>
-									<div className="mt-2 font-serif text-xl font-semibold">
-										{type}
-										<sup className="ml-1 text-xs text-muted-foreground">
-											{typePosts.length}
-										</sup>
-									</div>
-								</div>
-							))}
-							{stages.map(({ stage, posts: stagePosts }) => (
-								<div key={stage} className="rounded-lg border bg-background/70 p-4">
-									<div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
-										{copy.stage}
-									</div>
-									<div className="mt-2 font-serif text-xl font-semibold">
-										{stage}
-										<sup className="ml-1 text-xs text-muted-foreground">
-											{stagePosts.length}
-										</sup>
-									</div>
-								</div>
-							))}
-						</div>
 					</div>
 				</section>
 
 				<div className="mt-16 space-y-14">
+					<h2 className="font-serif text-2xl font-semibold">{copy.archive}</h2>
 					{groups.map(({ year, months }) => {
 						const yearCount = months.reduce(
 							(sum, m) => sum + m.posts.length,

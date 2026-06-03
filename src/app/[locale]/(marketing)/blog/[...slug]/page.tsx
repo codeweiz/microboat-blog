@@ -95,6 +95,13 @@ export default async function BlogPage(props: BlogsPageProps) {
 						author={blog.author}
 					/>
 					<PostLifecycle post={blog} locale={locale} className="mt-6" />
+					{blog.image ? (
+						<img
+							src={blog.image}
+							alt=""
+							className="mt-8 aspect-[16/9] w-full rounded-lg border object-cover"
+						/>
+					) : null}
 				</header>
 
 				<div className="prose mx-auto mt-8 font-serif">

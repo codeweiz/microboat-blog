@@ -8,16 +8,16 @@ export type KnowledgeCluster = {
 
 const copy = {
 	zh: {
-		kicker: "Knowledge map",
-		title: "按长期问题，而不是按发布日期浏览。",
-		body: "每个主题都是一组持续生长的文章。读者可以从入口文章进入，也可以顺着概念和反向链接继续走。",
+		kicker: "常写的话题",
+		title: "文章慢慢多起来之后，主题会自己浮出来。",
+		body: "这里不是正式分类表，只是把最近反复出现的关键词放在一起，方便继续读。",
 		enter: "从",
 		enterSuffix: "进入",
 	},
 	en: {
-		kicker: "Knowledge map",
-		title: "Browse by long-running questions, not only dates.",
-		body: "Each cluster is a living group of posts. Start from the entry article, then follow concepts and backlinks.",
+		kicker: "Recurring topics",
+		title: "As posts accumulate, themes start to surface.",
+		body: "This is not a rigid taxonomy; just a quieter way to follow recurring ideas.",
 		enter: "Start with",
 		enterSuffix: "",
 	},
@@ -81,7 +81,7 @@ export function KnowledgeMap({
 									href={`/blog/${entry.slug}`}
 									className="mt-5 inline-flex text-sm font-medium text-primary hover:underline"
 								>
-									{t.enter}《{entry.title}》{t.enterSuffix}
+									{t.enter} {entry.title} {t.enterSuffix}
 								</I18nLink>
 							</div>
 						);

@@ -16,59 +16,73 @@ import {
 export default async function Home() {
 	const locale = (await getLocale()) as Locale;
 	const t = await getTranslations("home");
-	const principles = t.raw("principles") as string[];
 
 	const posts = getPostsByLocale(locale);
 	const startHere = getStartHerePosts(locale, 5);
 	const clusters = getConceptClusters(locale, 8);
 	const livingNotes = getRecentlyUpdatedPosts(locale, 4);
 	const latest = posts.slice(0, 4);
+	const heroPost = startHere[0] ?? posts[0];
 
 	return (
 		<>
-			<section className="px-6 pt-32 pb-16">
-				<div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1fr_0.75fr] lg:items-end">
+			<section className="px-6 pt-28 pb-14">
+				<div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
 					<div>
 						<span className="inline-flex rounded-md border border-border/70 bg-background/70 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-primary shadow-sm backdrop-blur">
-						{t("badge")}
-					</span>
+							{t("badge")}
+						</span>
 
-						<h1 className="mt-6 max-w-4xl font-serif text-5xl font-semibold leading-[1.04] tracking-normal md:text-7xl">
+						<h1 className="mt-6 max-w-3xl font-serif text-5xl font-semibold leading-[1.05] tracking-normal md:text-6xl">
 							{t("title")}
-					</h1>
+						</h1>
 
-						<p className="mt-6 max-w-2xl font-serif text-xl leading-9 text-muted-foreground md:text-2xl">
-						{t("intro")}
-					</p>
+						<p className="mt-6 max-w-2xl font-serif text-xl leading-9 text-muted-foreground">
+							{t("intro")}
+						</p>
 
 						<div className="mt-10 flex flex-wrap items-center gap-3">
-						<Button asChild size="lg" className="group">
-							<I18nLink href="/blog">
-								{t("cta")}
-								<ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-							</I18nLink>
-						</Button>
+							<Button asChild size="lg" className="group">
+								<I18nLink href="/blog">
+									{t("cta")}
+									<ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+								</I18nLink>
+							</Button>
 							<Button asChild size="lg" variant="outline">
 								<I18nLink href="/blog#knowledge-map">
 									<Network className="mr-1 h-4 w-4" />
 									{t("mapCta")}
 								</I18nLink>
-						</Button>
+							</Button>
+						</div>
 					</div>
-				</div>
-					<div className="rounded-lg border bg-muted/20 p-5">
-						<p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-							{t("principlesTitle")}
-						</p>
-						<ul className="mt-4 space-y-3">
-							{principles.map((item) => (
-								<li key={item} className="flex gap-3 text-sm leading-6">
-									<span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-									<span>{item}</span>
-								</li>
-							))}
-						</ul>
-					</div>
+					{heroPost ? (
+						<I18nLink
+							href={`/blog/${heroPost.slug}`}
+							className="group overflow-hidden rounded-lg border bg-muted/20 transition-colors hover:border-primary/40"
+						>
+							{heroPost.image ? (
+								<img
+									src={heroPost.image}
+									alt={heroPost.title}
+									className="aspect-[16/10] w-full object-cover"
+								/>
+							) : null}
+							<div className="p-5">
+								<div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+									<span>{heroPost.type}</span>
+									<span>·</span>
+									<span>{heroPost.stage}</span>
+								</div>
+								<h2 className="mt-3 font-serif text-2xl font-semibold leading-tight group-hover:underline">
+									{heroPost.title}
+								</h2>
+								<p className="mt-3 line-clamp-2 text-sm leading-6 text-muted-foreground">
+									{heroPost.description}
+								</p>
+							</div>
+						</I18nLink>
+					) : null}
 				</div>
 			</section>
 
@@ -92,8 +106,17 @@ export default async function Home() {
 							<li key={post.slug}>
 								<I18nLink
 									href={`/blog/${post.slug}`}
-									className="group flex flex-col gap-1 py-6 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
+									className="group grid gap-4 py-6 sm:grid-cols-[8rem_1fr_auto] sm:items-center"
 								>
+									{post.image ? (
+										<img
+											src={post.image}
+											alt=""
+											className="aspect-[16/10] w-full rounded-md border object-cover"
+										/>
+									) : (
+										<div className="hidden aspect-[16/10] rounded-md border bg-muted sm:block" />
+									)}
 									<div className="min-w-0 flex-1">
 										<h3 className="truncate font-serif text-lg font-medium group-hover:underline">
 											{post.title}

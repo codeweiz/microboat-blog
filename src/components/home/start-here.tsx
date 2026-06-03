@@ -5,14 +5,14 @@ import { postStats } from "@/lib/posts";
 
 const copy = {
 	zh: {
-		kicker: "Start here",
-		title: "第一次来，从这些问题开始。",
-		body: "这些不是最新文章列表，而是最能代表这个站的入口：工具如何改变工程、系统如何恢复、组织如何学习。",
+		kicker: "推荐几篇",
+		title: "如果只读几篇，可以从这里开始。",
+		body: "这些文章比较能代表我最近写作的方向：AI 工具链、系统边界、质量回路和组织学习。",
 	},
 	en: {
-		kicker: "Start here",
-		title: "If this is your first visit, start with the questions.",
-		body: "These are not the latest posts. They are the best entrances into the site's recurring questions: tools, systems, learning, and judgment.",
+		kicker: "A few good starts",
+		title: "If you only read a few posts, start here.",
+		body: "These pieces best represent the current direction: AI toolchains, system boundaries, quality loops, and organizational learning.",
 	},
 };
 
