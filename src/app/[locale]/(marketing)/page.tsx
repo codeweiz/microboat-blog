@@ -1,6 +1,7 @@
 import { ArrowRight, Github, Rss } from "lucide-react";
 import type { Locale } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
+import { KnowledgeLineage } from "@/components/home/knowledge-lineage";
 import { Button } from "@/components/ui/button";
 import { Link as I18nLink } from "@/i18n/navigation";
 import { getPostsByLocale } from "@/lib/posts";
@@ -66,6 +67,8 @@ export default async function Home() {
 					) : null}
 				</div>
 			</section>
+
+			<KnowledgeLineage posts={latest} locale={locale} />
 
 			<section className="px-6 pb-24">
 				<div className="mx-auto max-w-6xl">
