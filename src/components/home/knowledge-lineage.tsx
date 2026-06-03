@@ -5,12 +5,10 @@ import { KnowledgeLineageGraph } from "./knowledge-lineage-graph";
 
 type LineageNode = {
 	id: string;
-	kind: "concept" | "post";
 	label: string;
-	slug?: string;
+	slug: string;
 	image?: string;
-	date?: string;
-	count?: number;
+	date: string;
 	x: number;
 	y: number;
 };
@@ -19,39 +17,28 @@ type LineageEdge = {
 	id: string;
 	from: string;
 	to: string;
-	relation: "concept" | "link" | "series";
+	relation: "shared" | "link" | "series";
+	weight: number;
 };
-
-const conceptSlots = [
-	{ x: 14, y: 22 },
-	{ x: 42, y: 12 },
-	{ x: 76, y: 20 },
-	{ x: 91, y: 52 },
-	{ x: 70, y: 88 },
-	{ x: 36, y: 86 },
-	{ x: 9, y: 60 },
-];
-
-const postSlots = [
-	{ x: 25, y: 36 },
-	{ x: 51, y: 30 },
-	{ x: 76, y: 42 },
-	{ x: 33, y: 61 },
-	{ x: 57, y: 61 },
-	{ x: 82, y: 70 },
-	{ x: 18, y: 77 },
-];
-
-function labelFromSlug(value: string) {
-	return value
-		.split(/[-_]/)
-		.filter(Boolean)
-		.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-		.join(" ");
-}
 
 function postConcepts(post: BlogPost) {
 	return Array.from(new Set([...(post.concepts ?? []), ...(post.tags ?? [])]));
+}
+
+function nodePosition(index: number, total: number) {
+	if (index === 0) {
+		return { x: 50, y: 50 };
+	}
+
+	const angle = index * 137.508 * (Math.PI / 180);
+	const ring = Math.ceil(index / 7);
+	const radius = Math.min(10 + ring * 13 + (index % 3) * 2.5, 42);
+	const centerPull = total > 14 ? 0.88 : 1;
+
+	return {
+		x: 50 + Math.cos(angle) * radius * centerPull,
+		y: 50 + Math.sin(angle) * radius * 0.72 * centerPull,
+	};
 }
 
 export function KnowledgeLineage({
@@ -61,38 +48,14 @@ export function KnowledgeLineage({
 	posts: BlogPost[];
 	locale: string;
 }) {
-	const visiblePosts = posts.slice(0, postSlots.length);
-	const conceptCounts = new Map<string, number>();
+	const visiblePosts = posts.slice(0, 24);
 
-	for (const post of visiblePosts) {
-		for (const concept of postConcepts(post)) {
-			conceptCounts.set(concept, (conceptCounts.get(concept) ?? 0) + 1);
-		}
-	}
-
-	const concepts = Array.from(conceptCounts, ([concept, count]) => ({
-		concept,
-		count,
-	}))
-		.sort((a, b) => b.count - a.count || a.concept.localeCompare(b.concept))
-		.slice(0, conceptSlots.length);
-
-	if (visiblePosts.length === 0 || concepts.length === 0) {
+	if (visiblePosts.length === 0) {
 		return null;
 	}
 
-	const conceptNodes: LineageNode[] = concepts.map(
-		({ concept, count }, index) => ({
-			id: `concept:${concept}`,
-			kind: "concept",
-			label: labelFromSlug(concept),
-			count,
-			...conceptSlots[index],
-		}),
-	);
-	const postNodes: LineageNode[] = visiblePosts.map((post, index) => ({
+	const nodes: LineageNode[] = visiblePosts.map((post, index) => ({
 		id: `post:${post.slug}`,
-		kind: "post",
 		label: post.title,
 		slug: post.slug,
 		image: post.image,
@@ -100,45 +63,63 @@ export function KnowledgeLineage({
 			month: "short",
 			day: "numeric",
 		}),
-		...postSlots[index],
+		...nodePosition(index, visiblePosts.length),
 	}));
+
 	const visibleSlugs = new Set(visiblePosts.map((post) => post.slug));
-	const conceptEdges: LineageEdge[] = visiblePosts.flatMap((post) =>
-		concepts
-			.filter(({ concept }) => postConcepts(post).includes(concept))
-			.slice(0, 3)
-			.map(({ concept }) => ({
-				id: `concept:${concept}->post:${post.slug}`,
-				from: `concept:${concept}`,
-				to: `post:${post.slug}`,
-				relation: "concept" as const,
-			})),
-	);
-	const postEdges: LineageEdge[] = visiblePosts.flatMap((post) => {
-		const linked = (post.links ?? [])
-			.filter((slug) => visibleSlugs.has(slug))
-			.map((slug) => ({
+	const edges = new Map<string, LineageEdge>();
+	const addEdge = (edge: LineageEdge) => {
+		const current = edges.get(edge.id);
+		if (!current || current.weight < edge.weight) {
+			edges.set(edge.id, edge);
+		}
+	};
+
+	for (const post of visiblePosts) {
+		for (const slug of post.links ?? []) {
+			if (!visibleSlugs.has(slug)) {
+				continue;
+			}
+			addEdge({
 				id: `post:${post.slug}->post:${slug}:link`,
 				from: `post:${post.slug}`,
 				to: `post:${slug}`,
-				relation: "link" as const,
-			}));
-		const sameSeries = visiblePosts
-			.filter(
-				(candidate) =>
-					candidate.slug !== post.slug &&
-					post.series &&
-					candidate.series === post.series,
-			)
-			.slice(0, 1)
-			.map((candidate) => ({
-				id: `post:${post.slug}->post:${candidate.slug}:series`,
-				from: `post:${post.slug}`,
-				to: `post:${candidate.slug}`,
-				relation: "series" as const,
-			}));
-		return [...linked, ...sameSeries];
-	});
+				relation: "link",
+				weight: 12,
+			});
+		}
+	}
+
+	for (let i = 0; i < visiblePosts.length; i += 1) {
+		const source = visiblePosts[i];
+		const sourceConcepts = new Set(postConcepts(source));
+		for (let j = i + 1; j < visiblePosts.length; j += 1) {
+			const target = visiblePosts[j];
+			if (source.series && source.series === target.series) {
+				addEdge({
+					id: `post:${source.slug}->post:${target.slug}:series`,
+					from: `post:${source.slug}`,
+					to: `post:${target.slug}`,
+					relation: "series",
+					weight: 9,
+				});
+			}
+
+			const shared = postConcepts(target).filter((concept) =>
+				sourceConcepts.has(concept),
+			);
+			if (shared.length > 0) {
+				addEdge({
+					id: `post:${source.slug}->post:${target.slug}:shared`,
+					from: `post:${source.slug}`,
+					to: `post:${target.slug}`,
+					relation: "shared",
+					weight: shared.length,
+				});
+			}
+		}
+	}
+
 	const copy =
 		locale === "zh"
 			? { kicker: "知识谱系", title: "文章之间的暗线", all: "全部文章" }
@@ -167,9 +148,10 @@ export function KnowledgeLineage({
 					</I18nLink>
 				</div>
 				<KnowledgeLineageGraph
-					nodes={[...conceptNodes, ...postNodes]}
-					edges={[...conceptEdges, ...postEdges]}
-					locale={locale}
+					nodes={nodes}
+					edges={Array.from(edges.values())
+						.sort((a, b) => b.weight - a.weight)
+						.slice(0, 64)}
 				/>
 			</div>
 		</section>

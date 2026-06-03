@@ -68,7 +68,7 @@ export default async function Home() {
 				</div>
 			</section>
 
-			<KnowledgeLineage posts={latest} locale={locale} />
+			<KnowledgeLineage posts={posts} locale={locale} />
 
 			<section className="px-6 pb-24">
 				<div className="mx-auto max-w-6xl">
