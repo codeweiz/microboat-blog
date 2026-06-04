@@ -1,0 +1,301 @@
+---
+title: "When dynamic languages grow up, they ask for static feedback"
+description: "Elixir 1.20 brings gradual type checking into a language known for dynamic code, concurrency, and a light touch. That is not a defeat for dynamic languages. It is what mature engineering systems do when they need earlier feedback."
+keywords: "Elixir 1.20, gradual typing, dynamic languages, static typing, TypeScript, Python typing, Sorbet, Dialyzer, Hack"
+createdAt: 2026-06-04T22:10:00+08:00
+updatedAt: 2026-06-04T22:10:00+08:00
+tags: ["programming-languages", "elixir", "typing", "software-engineering", "notes"]
+author: Microboat
+image: "/blog/dynamic-language-static-feedback-hero.png"
+type: essay
+stage: evergreen
+series: "programming-language-notes"
+seriesOrder: 1
+featured: true
+startHere: false
+concepts: ["gradual-typing", "dynamic-languages", "static-feedback", "language-evolution"]
+links: ["terminal-agent-interface", "everyone-has-ai-company-learns-nothing"]
+aliases: ["Elixir gradual typing", "dynamic language type systems", "static feedback"]
+updatedReason: "Initial version; starts from Elixir 1.20 and looks back at how dynamic languages have historically adopted static feedback."
+---
+
+<Callout title="AI Summary">
+
+- Elixir 1.20 does not turn Elixir into a traditional static language. Its first milestone is type inference and gradual type checking without new type annotations.
+- This is part of a broader pattern: TypeScript for JavaScript, PEP 484 for Python, Sorbet for Ruby, Hack for PHP, and Dialyzer for Erlang all tried to bring earlier feedback into dynamic ecosystems.
+- The interesting question is not whether dynamic or static typing won. It is how a language can expose errors earlier without destroying the feel that made people choose it.
+- Elixir's `dynamic()` is not just a "whatever" type. It narrows as values are used, then reports cases that are guaranteed to fail at runtime.
+- A good type system is not a religion. It is a feedback system. It moves some mistakes from runtime, tests, and production into the editor, compiler, and CI loop.
+
+</Callout>
+
+Some programming languages are born allergic to ceremony.
+
+Ruby, Python, JavaScript, PHP, Erlang, and Elixir do not feel the same, but they all won affection through a similar promise: write the thing first. Fewer declarations. Less scaffolding. Less work done only to satisfy a compiler. If you have an idea, turn it into a function, an object, a message, a process, a script, or a page. The language trusts you before it corrects you.
+
+That freedom is wonderful.
+
+Until the codebase grows up.
+
+For one person writing a script, a dynamic language can feel like a sharp pocketknife. For ten people maintaining a service, it becomes a shared whiteboard. For a hundred people, ten years of history, old dependencies, production incidents, and new-hire onboarding, the little things that "everyone knows" start turning into debt.
+
+What can this function return?
+
+Does this map always have that key?
+
+Can `nil` leak through here?
+
+Is this branch already impossible?
+
+Many explanations that dynamic languages saved at the beginning eventually return in another form: documentation, tests, lint rules, code review comments, runtime assertions, IDE plugins, type annotations, and static analysis.
+
+That is why my first reaction to the [Elixir 1.20 release](https://elixir-lang.org/blog/2026/06/03/elixir-v1-20-0-released/) was not "dynamic languages lost again."
+
+It felt more like this: a language is learning how to age gracefully.
+
+![A dusk engineering workshop where flowing dynamic code crosses a glowing bridge and becomes checkable type rails.](/blog/dynamic-language-static-feedback-hero.png)
+
+## What Elixir Changed
+
+The official Elixir 1.20 headline is direct: now a gradually typed language.
+
+That line is easy to misread.
+
+It does not mean Elixir has suddenly become Haskell, Rust, or OCaml. It does not mean every Elixir programmer now has to cover functions with type signatures. In fact, the first step is deliberately conservative: **type inference and gradual type checking for every Elixir program, without introducing type annotations**.
+
+The release focuses on two kinds of findings: dead code and verified bugs.
+
+Dead code is straightforward. The type and control-flow information already says a branch cannot be reached.
+
+Verified bugs are more interesting. They are cases where, if the code reaches that expression, it is guaranteed to fail at runtime. The type system is not trying to complain about every inelegant possibility. It starts with the places that will definitely break.
+
+That matters.
+
+When a dynamic language introduces type checking, the hardest enemy is often not theory. It is trust. If the tool reports too many false positives, developers will treat it as noise. After three noisy warnings, the brain begins filtering. Once filtering starts, even a precise system loses.
+
+Elixir's first job is to earn trust.
+
+Its `dynamic()` type is the most interesting piece. In many gradual systems, a type like `any` or `untyped` carries a hint of "do not check too hard here." Information becomes looser. Analysis gets weaker.
+
+Elixir's `dynamic()` behaves more like a range.
+
+A value may enter a function with an unknown shape. Then the code uses it. You place guards on it. You pattern match it. You read fields from it. You pass it to functions. Each action leaves evidence. The type system uses that evidence to narrow the range.
+
+The release gives a simple example: if you write `data.a + data.b`, the system can infer that `data` must at least be a map with numeric `a` and `b` fields. If you later try to add the whole `data` value as if it were a number, the system can report the problem.
+
+This is not dynamic code being forced into a static mold.
+
+It is the language recovering constraints from the way the code already behaves.
+
+![A three-step feedback diagram: dynamic value becomes observed use, then early warning.](/blog/dynamic-language-feedback-loop.png)
+
+## We Have Seen This Before
+
+Elixir is not the first dynamic language to arrive here.
+
+In a way, dynamic language communities have been answering the same question for more than a decade:
+
+> How do we get earlier error feedback without overthrowing the language people already use?
+
+Different communities chose different routes.
+
+**TypeScript** is the most visible success. JavaScript itself did not become a static language. TypeScript stood beside it as a JavaScript-compatible superset. It appeared publicly in 2012 and reached 1.0 in 2014. Microsoft framed the goal around large-scale JavaScript applications. The problem was never whether tiny scripts needed types. The problem was how large browser and Node codebases could survive longer.
+
+TypeScript won not only because of the type system, but because it respected JavaScript's position. It did not demand that the world rewrite itself. It said: you already have JavaScript; here is a path to make it more maintainable.
+
+**Python** took a gentler path. PEP 484 was created in 2014 for Python 3.5 and introduced type hints. It emphasized offline type checkers, kept Python dynamic, and made type hints voluntary. That is a very Python kind of move: standardize the vocabulary, then let tools, IDEs, mypy, libraries, and team conventions grow around it.
+
+The meaning of Python typing was not "Python becomes Java." It was closer to this: a large ecosystem gets a shared way to describe boundaries. Before that, every library, team, and doc page hinted at types in its own private dialect.
+
+**Ruby** had a more tangled story. Ruby's dynamic behavior runs deep, and Rails-style metaprogramming makes static analysis hard. Sorbet chose gradual adoption: different files can have different strictness levels, `T.untyped` can bridge gaps, and teams can add types piece by piece. Sorbet's own docs are candid about the tradeoff: gradual typing enables incremental adoption, but the guarantees are weaker than a fully typed language.
+
+That honesty is important. Gradual typing is not a free lunch. It is a migration strategy.
+
+**PHP** gradually brought constraints into the language itself. PHP 7 added scalar type declarations and return type declarations, and later releases continued adding typed properties, union types, and related features. Its path was less external than TypeScript and less "annotations plus tools" than Python. It kept adding guardrails inside the original language.
+
+**Hack** is another fork in the road. It grew out of PHP's large-scale pain and became a language that tries to combine the fast development cycle of a dynamic language with the discipline of static typing. Hack's question was not "is PHP good or bad?" It was "how does a PHP-like system at Facebook scale keep evolving?"
+
+**Erlang** had its own important tool long before this moment: Dialyzer. It uses success typing to find problems without turning Erlang into a conventional statically typed language. For the BEAM world, this history matters. Elixir did not suddenly discover type awareness in isolation. It sits beside Erlang, Dialyzer, specs, pattern matching, OTP, and decades of production systems.
+
+That is why Elixir 1.20 is interesting. It does not merely copy TypeScript, Python, or Sorbet.
+
+It starts without asking developers to write types.
+
+It first asks the compiler to understand more from the code that already exists.
+
+![A timeline illustration showing TypeScript, Hack, Python typing, Sorbet/Ruby, and Elixir 1.20.](/blog/dynamic-language-history-timeline.png)
+
+## Dynamic Languages Do Not Hate Types
+
+Arguments about types often collapse into personality fights.
+
+Some people like static types because they make boundaries explicit, refactoring safer, and tooling better.
+
+Some people like dynamic languages because they are light, expressive, and do not force you to formalize a problem before you understand it.
+
+The conversation can quickly turn into two camps looking down on each other: one side sees recklessness, the other sees ceremony.
+
+Real engineering is usually less dramatic.
+
+Dynamic languages do not hate types. They hate types that arrive too early, too heavily, or too mechanically.
+
+When an idea is young, you may genuinely not know the final shape of the data. You need to write it down, run it, watch it move, and adjust. At that stage, a strong type system can interrupt thought if it demands all boundaries up front.
+
+But once an interface stabilizes, once a path serves production users every day, once ten modules depend on the same return shape, once a new teammate needs to understand what can happen here, types stop being shackles.
+
+They become shared language.
+
+A good type system is not there to prove that programmers are clever.
+
+It helps a team rely less on memory.
+
+This is similar to tests. Nobody serious thinks tests destroy freedom. Bad tests do. Fragile snapshots do. Tests that freeze implementation details do. Good tests capture important assumptions and make later change less frightening.
+
+Types are like that.
+
+A bad type system makes people fill forms.
+
+A good type system lets people hear the system cough earlier.
+
+## Why Old Languages Ask For Constraints
+
+Young language communities often reward expressiveness.
+
+That makes sense. A new language has to make a small group of people love it first. It needs to feel smooth, have character, and solve some class of problem more beautifully than the alternatives.
+
+Elixir's early appeal was obviously not a type system.
+
+It was BEAM. Lightweight processes. Fault tolerance. Pattern matching. Phoenix. The feeling that you could write resilient concurrent systems with less code and less panic. People did not choose Elixir because it felt like Java. They chose it partly because it did not.
+
+But when a language succeeds, its users change.
+
+Early users tolerate uncertainty because they are trading it for speed and expression. Later users arrive with company systems, production incidents, long maintenance windows, team coordination, compliance needs, and hiring concerns. They do not only ask whether the language is elegant. They ask:
+
+Can we catch this before production?
+
+Can tools support large refactors?
+
+Can a new engineer see function boundaries in the editor?
+
+Can library authors describe APIs clearly?
+
+Can this code still be understood ten years from now?
+
+Those questions do not disappear just because a language started dynamic.
+
+So history repeats itself: a language first wins through freedom, then survives through feedback systems.
+
+TypeScript was not a betrayal of JavaScript.
+
+PEP 484 was not a betrayal of Python.
+
+Sorbet was not a betrayal of Ruby.
+
+Elixir 1.20 is not a betrayal of Elixir.
+
+They are all acknowledgements of the same thing: freedom does not solve every scaling problem.
+
+## The Restraint Is The Point
+
+The best part of Elixir 1.20 is that it did not begin by putting type signatures in front of users.
+
+That sounds backwards. If a language is becoming gradually typed, why not start with type syntax?
+
+Because syntax would immediately move the community into style arguments.
+
+How should types be written?
+
+How complex is too complex?
+
+Should libraries be forced to annotate?
+
+What happens to old code?
+
+How should tutorials change?
+
+Elixir's team avoided that first. They asked a better question: if users write nothing new, can the compiler still provide useful feedback?
+
+That order is smart.
+
+If a type system needs lots of annotation before it shows value, adoption in a dynamic community is difficult. The hardest part is not writing the hundredth type. It is convincing someone to write the first.
+
+Elixir 1.20 brings value to the old workflow first.
+
+You do not rewrite code.
+
+You do not learn new syntax.
+
+You first see the compiler find some failures that really would happen.
+
+Once trust exists, the community can talk about typed structs, type signatures, recursive types, and parametric types.
+
+This is good migration design. Do not ask users to pay the migration cost first and promise value later. Put real value inside the old workflow, then let people decide the path is worth following.
+
+## Type Systems As Institutional Memory
+
+I increasingly think of type systems as a kind of institutional memory.
+
+The first time a bug appears, it is an incident.
+
+The second time, it is experience.
+
+The third time, if a human still has to catch it by eye, it is a process problem.
+
+A type system can turn part of that experience into a machine-checkable boundary. This function cannot treat a map as a number. This branch cannot receive anything except a non-nil binary. This key does not exist. This return value no longer has the shape the caller assumes.
+
+It does not replace human judgment.
+
+It only turns some judgments that should not be remembered manually into feedback.
+
+That is why "dynamic versus static" often asks the wrong question.
+
+The real question is not whether a language should have types.
+
+The real question is: where should mistakes be discovered?
+
+If users discover them, it is too late.
+
+If tests discover them, that is better, but the cost can still be high.
+
+If editors, compilers, and CI discover them early, the team pays less context-switching tax.
+
+Static feedback is not valuable because it makes programs philosophically pure.
+
+It is valuable because it makes mistakes cheaper.
+
+## Aging Gracefully
+
+What I like about Elixir 1.20 is not simply that it has types now.
+
+I like that it does not deny itself.
+
+It does not say the old dynamic experience was wrong.
+
+It also does not pretend that scale leaves language needs unchanged.
+
+It asks a more mature question: when a dynamic language keeps growing, how can it warn developers earlier without sacrificing the feel that made people choose it?
+
+That is more interesting than "dynamic or static."
+
+Young languages often win people through freedom.
+
+Mature languages learn to put feedback around that freedom.
+
+Elixir 1.20 is not the end. The release notes are clear that type signatures, recursive types, parametric types, and other work still lie ahead. But this first step has a good direction: disturb developers less, recover information from existing code, find bugs that are guaranteed to fail, and build trust.
+
+If good languages grow with the programmers who use them, they eventually have to learn one thing:
+
+Not only how to let people write quickly.
+
+Also how to let people be wrong early.
+
+## Sources
+
+- [Elixir v1.20 released: now a gradually typed language](https://elixir-lang.org/blog/2026/06/03/elixir-v1-20-0-released/)
+- [Hacker News discussion](https://news.ycombinator.com/item?id=48388324)
+- [Announcing TypeScript 1.0](https://devblogs.microsoft.com/typescript/announcing-typescript-1-0/)
+- [PEP 484 - Type Hints](https://peps.python.org/pep-0484/)
+- [Hack language](https://hacklang.org/)
+- [Gradual Type Checking and Sorbet](https://sorbet.org/docs/gradual)
+- [PHP 7.0 new features: scalar type declarations and return type declarations](https://www.php.net/manual/en/migration70.new-features.php)
+- [Erlang Dialyzer documentation](https://www.erlang.org/doc/apps/dialyzer/dialyzer.html)
