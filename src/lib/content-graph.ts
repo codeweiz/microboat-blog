@@ -2,6 +2,7 @@ export type KnowledgePost = {
 	slug: string;
 	title: string;
 	description?: string;
+	image?: string;
 	type?: string;
 	stage?: string;
 	series?: string;

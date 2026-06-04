@@ -1,9 +1,9 @@
 {
 	"app": {
-		"name": "Microboat's Blog",
+		"name": "Microboat",
 		"tagline": "Field notes from building full-stack — backend, frontend, infra, and the tools in between.",
 		"metadata": {
-			"title": "Microboat — Personal Blog",
+			"title": "Microboat",
 			"description": "Field notes from building full-stack — backend, frontend, infra, and the tools in between."
 		}
 	},
@@ -12,13 +12,30 @@
 		"title": "Notes taking shape between code, tools, and people.",
 		"intro": "Some questions keep returning after a project is over: how a command changes a workflow, how a boundary reveals a system's character, and how new tools change human judgment. I keep those traces here.",
 		"cta": "Read posts",
+		"aiKicker": "Today",
+		"aiTitle": "Today in AI",
+		"aiIntro": "Not just headlines. Each item explains the background, what changed, why it matters, and what to do next.",
+		"aiCta": "Open AI Observatory",
 		"latest": "Latest posts",
 		"viewAll": "View all"
 	},
 	"navigation": {
 		"home": "Home",
 		"blog": "Blog",
+		"ai": "AI Observatory",
 		"about": "About"
+	},
+	"ai": {
+		"title": "AI Observatory",
+		"description": "A lightweight board for AI updates that matter to engineering practice, product judgment, and organizational cost.",
+		"keywords": "AI observatory,AI digest,engineering practice,AI toolchains",
+		"kicker": "AI Observatory",
+		"intro": "This is not a news stream. Each item keeps the original link, a short summary, and an engineering action point. The observations worth expanding can later become full essays.",
+		"updated": "Updated",
+		"refreshMode": "Refresh mode",
+		"sources": "Lenses",
+		"today": "Today's digest",
+		"empty": "No digest items yet."
 	},
 	"blog": {
 		"title": "Blog",

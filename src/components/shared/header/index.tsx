@@ -26,12 +26,12 @@ export const Header = ({ searchIndex }: { searchIndex: SearchEntry[] }) => {
 					"fixed z-20 w-full bg-background/80 backdrop-blur border-b",
 				)}
 			>
-				<div className="mx-auto max-w-5xl px-6">
-					<div className="flex flex-wrap items-center justify-between gap-6 py-3 lg:py-4">
+				<div className="px-6">
+					<div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-6 py-3 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:py-4">
 						<I18nLink
 							href="/"
 							aria-label="home"
-							className="flex items-center gap-2 font-serif text-xl font-bold"
+							className="flex min-w-0 items-center gap-2 font-serif text-xl font-bold"
 						>
 							<Logo />
 							{t("name")}
@@ -52,7 +52,7 @@ export const Header = ({ searchIndex }: { searchIndex: SearchEntry[] }) => {
 
 						<div
 							className={cn(
-								"w-full flex-col items-start gap-4 lg:flex lg:w-auto lg:flex-row lg:items-center lg:gap-6",
+								"w-full flex-col items-start gap-4 lg:col-span-2 lg:grid lg:w-auto lg:grid-cols-[auto_1fr] lg:items-center lg:gap-6",
 								menuState ? "flex" : "hidden",
 							)}
 						>
@@ -70,7 +70,7 @@ export const Header = ({ searchIndex }: { searchIndex: SearchEntry[] }) => {
 								))}
 							</ul>
 
-							<div className="flex items-center gap-1 lg:gap-2">
+							<div className="flex items-center gap-1 lg:justify-end lg:gap-2">
 								<SearchDialog index={searchIndex} />
 								{appConfig.ui.theme.enabled && <ThemeToggleButton />}
 								{appConfig.i18n.enabled && <LocaleToggle />}

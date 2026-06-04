@@ -2,8 +2,8 @@ import type { AppConfig } from "@/config/types";
 
 export const appConfig = {
 	metadata: {
-		name: "Microboat Blog",
-		title: "Microboat — Personal Blog",
+		name: "Microboat",
+		title: "Microboat",
 		description: "Notes on engineering, tools, and the work I'm shipping.",
 		images: {
 			logoLight: "/logo-light.svg",

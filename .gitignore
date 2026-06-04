@@ -13,6 +13,9 @@
 
 # testing
 /coverage
+/.superpowers
+/.playwright-mcp
+/verification-*.png
 
 # next.js
 /.next/

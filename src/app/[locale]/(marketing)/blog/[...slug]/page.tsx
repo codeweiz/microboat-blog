@@ -9,20 +9,15 @@ import {
 	getAllPosts,
 	getPostBySlug,
 	getPostsByLocale,
-	postStats,
 } from "@/lib/posts";
 import { getNextReads } from "@/lib/recommendations";
 import { cn } from "@/lib/utils";
 
 import "@/styles/docs-mdx.css";
-import { ContentGraph } from "@/components/blog/content-graph";
 import { Giscus } from "@/components/blog/giscus";
 import { GoToTop } from "@/components/blog/go-to-top";
 import { NextReads } from "@/components/blog/next-reads";
-import { PostLifecycle } from "@/components/blog/post-lifecycle";
-import { PostMeta } from "@/components/blog/post-meta";
 import { PostNav } from "@/components/blog/post-nav";
-import { TagPills } from "@/components/blog/tag-pills";
 import { DashboardTableOfContents } from "@/components/blog/toc";
 
 export async function generateMetadata({
@@ -70,7 +65,6 @@ export default async function BlogPage(props: BlogsPageProps) {
 	}
 
 	const MDX = blog.body;
-	const { minutes, words } = postStats(blog);
 	const { older, newer } = getAdjacentPosts(blog.slug, locale);
 	const localePosts = getPostsByLocale(locale);
 	const nextReads = getNextReads(blog, localePosts, 4);
@@ -87,14 +81,6 @@ export default async function BlogPage(props: BlogsPageProps) {
 					<h1 className="font-serif text-3xl md:text-[2.5rem] font-bold leading-tight">
 						{blog.title}
 					</h1>
-					<PostMeta
-						className="mt-4"
-						date={blog.createdAt}
-						minutes={minutes}
-						words={words}
-						author={blog.author}
-					/>
-					<PostLifecycle post={blog} locale={locale} className="mt-6" />
 					{blog.image ? (
 						<img
 							src={blog.image}
@@ -107,23 +93,6 @@ export default async function BlogPage(props: BlogsPageProps) {
 				<div className="prose mx-auto mt-8 font-serif">
 					<MDX components={components} />
 				</div>
-
-				<TagPills className="mt-10" tags={blog.tags} />
-
-				{blog.concepts?.length ? (
-					<div className="mt-6 flex flex-wrap gap-2">
-						{blog.concepts.map((concept) => (
-							<span
-								key={concept}
-								className="rounded-md border bg-muted/30 px-2.5 py-1 text-xs text-muted-foreground"
-							>
-								{concept}
-							</span>
-						))}
-					</div>
-				) : null}
-
-				<ContentGraph post={blog} posts={localePosts} />
 
 				<NextReads reads={nextReads} />
 

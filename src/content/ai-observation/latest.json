@@ -1,0 +1,1188 @@
+{
+	"generated_at": "2026-06-04T08:07:16.567357",
+	"source": "/Users/zhouwei/Projects/github/github-trending-spider/output/latest.json",
+	"counts": {
+		"github-daily": 10,
+		"github-weekly": 10,
+		"hacker-news": 10,
+		"v2ex": 10,
+		"tldr-ai": 10,
+		"openai": 10,
+		"anthropic": 10,
+		"infoq": 10
+	},
+	"items": [
+		{
+			"id": "github-daily-1-chopratejas-headroom",
+			"source_id": "github-daily",
+			"source": "GitHub Trending Daily",
+			"category": "开源趋势-每日热点",
+			"title": "chopratejas/headroom",
+			"url": "https://github.com/chopratejas/headroom",
+			"published_at": "",
+			"summary": "Compress tool outputs, logs, files, and RAG chunks before they reach the LLM. 60-95% fewer tokens, same answers. Library, proxy, MCP server. | 语言: Python | Stars: 9,637 | Forks: 635 | 3,530 stars today",
+			"backend_focus": "先看项目的 README、许可证、维护频率和接入成本，再判断是否值得进入技术雷达。",
+			"meta": {
+				"language": "Python",
+				"stars": 9637,
+				"forks": 635,
+				"stars_period": "3,530 stars today"
+			}
+		},
+		{
+			"id": "github-daily-2-affaan-m-ecc",
+			"source_id": "github-daily",
+			"source": "GitHub Trending Daily",
+			"category": "开源趋势-每日热点",
+			"title": "affaan-m/ECC",
+			"url": "https://github.com/affaan-m/ECC",
+			"published_at": "",
+			"summary": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond. | 语言: JavaScript | Stars: 205,698 | Forks: 31,582 | 2,141 stars today",
+			"backend_focus": "先看项目的 README、许可证、维护频率和接入成本，再判断是否值得进入技术雷达。",
+			"meta": {
+				"language": "JavaScript",
+				"stars": 205698,
+				"forks": 31582,
+				"stars_period": "2,141 stars today"
+			}
+		},
+		{
+			"id": "github-daily-3-aquasecurity-trivy",
+			"source_id": "github-daily",
+			"source": "GitHub Trending Daily",
+			"category": "开源趋势-每日热点",
+			"title": "aquasecurity/trivy",
+			"url": "https://github.com/aquasecurity/trivy",
+			"published_at": "",
+			"summary": "Find vulnerabilities, misconfigurations, secrets, SBOM in containers, Kubernetes, code repositories, clouds and more | 语言: Go | Stars: 35,390 | Forks: 415 | 24 stars today",
+			"backend_focus": "先看项目的 README、许可证、维护频率和接入成本，再判断是否值得进入技术雷达。",
+			"meta": {
+				"language": "Go",
+				"stars": 35390,
+				"forks": 415,
+				"stars_period": "24 stars today"
+			}
+		},
+		{
+			"id": "github-daily-4-nousresearch-hermes-agent",
+			"source_id": "github-daily",
+			"source": "GitHub Trending Daily",
+			"category": "开源趋势-每日热点",
+			"title": "NousResearch/hermes-agent",
+			"url": "https://github.com/NousResearch/hermes-agent",
+			"published_at": "",
+			"summary": "The agent that grows with you | 语言: Python | Stars: 179,074 | Forks: 30,673 | 1,735 stars today",
+			"backend_focus": "先看项目的 README、许可证、维护频率和接入成本，再判断是否值得进入技术雷达。",
+			"meta": {
+				"language": "Python",
+				"stars": 179074,
+				"forks": 30673,
+				"stars_period": "1,735 stars today"
+			}
+		},
+		{
+			"id": "github-daily-5-microsoft-markitdown",
+			"source_id": "github-daily",
+			"source": "GitHub Trending Daily",
+			"category": "开源趋势-每日热点",
+			"title": "microsoft/markitdown",
+			"url": "https://github.com/microsoft/markitdown",
+			"published_at": "",
+			"summary": "Python tool for converting files and office documents to Markdown. | 语言: Python | Stars: 142,822 | Forks: 9,760 | 1,984 stars today",
+			"backend_focus": "先看项目的 README、许可证、维护频率和接入成本，再判断是否值得进入技术雷达。",
+			"meta": {
+				"language": "Python",
+				"stars": 142822,
+				"forks": 9760,
+				"stars_period": "1,984 stars today"
+			}
+		},
+		{
+			"id": "github-daily-6-nesquena-hermes-webui",
+			"source_id": "github-daily",
+			"source": "GitHub Trending Daily",
+			"category": "开源趋势-每日热点",
+			"title": "nesquena/hermes-webui",
+			"url": "https://github.com/nesquena/hermes-webui",
+			"published_at": "",
+			"summary": "Hermes WebUI: The best way to use Hermes Agent from the web or from your phone! | 语言: Python | Stars: 13,090 | Forks: 1,593 | 719 stars today",
+			"backend_focus": "先看项目的 README、许可证、维护频率和接入成本，再判断是否值得进入技术雷达。",
+			"meta": {
+				"language": "Python",
+				"stars": 13090,
+				"forks": 1593,
+				"stars_period": "719 stars today"
+			}
+		},
+		{
+			"id": "github-daily-7-d4vinci-scrapling",
+			"source_id": "github-daily",
+			"source": "GitHub Trending Daily",
+			"category": "开源趋势-每日热点",
+			"title": "D4Vinci/Scrapling",
+			"url": "https://github.com/D4Vinci/Scrapling",
+			"published_at": "",
+			"summary": "🕷️ An adaptive Web Scraping framework that handles everything from a single request to a full-scale crawl! | 语言: Python | Stars: 60,206 | Forks: 5,802 | 1,067 stars today",
+			"backend_focus": "先看项目的 README、许可证、维护频率和接入成本，再判断是否值得进入技术雷达。",
+			"meta": {
+				"language": "Python",
+				"stars": 60206,
+				"forks": 5802,
+				"stars_period": "1,067 stars today"
+			}
+		},
+		{
+			"id": "github-daily-8-opendataloader-project-opendataloader-pdf",
+			"source_id": "github-daily",
+			"source": "GitHub Trending Daily",
+			"category": "开源趋势-每日热点",
+			"title": "opendataloader-project/opendataloader-pdf",
+			"url": "https://github.com/opendataloader-project/opendataloader-pdf",
+			"published_at": "",
+			"summary": "PDF Parser for AI-ready data. Automate PDF accessibility. Open-source. | 语言: Java | Stars: 23,244 | Forks: 2,181 | 570 stars today",
+			"backend_focus": "先看项目的 README、许可证、维护频率和接入成本，再判断是否值得进入技术雷达。",
+			"meta": {
+				"language": "Java",
+				"stars": 23244,
+				"forks": 2181,
+				"stars_period": "570 stars today"
+			}
+		},
+		{
+			"id": "github-daily-9-odoo-odoo",
+			"source_id": "github-daily",
+			"source": "GitHub Trending Daily",
+			"category": "开源趋势-每日热点",
+			"title": "odoo/odoo",
+			"url": "https://github.com/odoo/odoo",
+			"published_at": "",
+			"summary": "Odoo. Open Source Apps To Grow Your Business. | 语言: Python | Stars: 51,918 | Forks: 32,642 | 29 stars today",
+			"backend_focus": "先看项目的 README、许可证、维护频率和接入成本，再判断是否值得进入技术雷达。",
+			"meta": {
+				"language": "Python",
+				"stars": 51918,
+				"forks": 32642,
+				"stars_period": "29 stars today"
+			}
+		},
+		{
+			"id": "github-daily-10-open-llm-vtuber-open-llm-vtuber",
+			"source_id": "github-daily",
+			"source": "GitHub Trending Daily",
+			"category": "开源趋势-每日热点",
+			"title": "Open-LLM-VTuber/Open-LLM-VTuber",
+			"url": "https://github.com/Open-LLM-VTuber/Open-LLM-VTuber",
+			"published_at": "",
+			"summary": "Talk to any LLM with hands-free voice interaction, voice interruption, and Live2D taking face running locally across platforms | 语言: Python | Stars: 8,933 | Forks: 1,106 | 693 stars today",
+			"backend_focus": "先看项目的 README、许可证、维护频率和接入成本，再判断是否值得进入技术雷达。",
+			"meta": {
+				"language": "Python",
+				"stars": 8933,
+				"forks": 1106,
+				"stars_period": "693 stars today"
+			}
+		},
+		{
+			"id": "github-weekly-1-harry0703-moneyprinterturbo",
+			"source_id": "github-weekly",
+			"source": "GitHub Trending Weekly",
+			"category": "开源趋势-每周热点",
+			"title": "harry0703/MoneyPrinterTurbo",
+			"url": "https://github.com/harry0703/MoneyPrinterTurbo",
+			"published_at": "",
+			"summary": "利用AI大模型，一键生成高清短视频 Generate short videos with one click using AI LLM. | 语言: Python | Stars: 78,827 | Forks: 11,208 | 18,553 stars this week",
+			"backend_focus": "先看项目的 README、许可证、维护频率和接入成本，再判断是否值得进入技术雷达。",
+			"meta": {
+				"language": "Python",
+				"stars": 78827,
+				"forks": 11208,
+				"stars_period": "18,553 stars this week"
+			}
+		},
+		{
+			"id": "github-weekly-2-chopratejas-headroom",
+			"source_id": "github-weekly",
+			"source": "GitHub Trending Weekly",
+			"category": "开源趋势-每周热点",
+			"title": "chopratejas/headroom",
+			"url": "https://github.com/chopratejas/headroom",
+			"published_at": "",
+			"summary": "Compress tool outputs, logs, files, and RAG chunks before they reach the LLM. 60-95% fewer tokens, same answers. Library, proxy, MCP server. | 语言: Python | Stars: 9,637 | Forks: 635 | 6,245 stars this week",
+			"backend_focus": "先看项目的 README、许可证、维护频率和接入成本，再判断是否值得进入技术雷达。",
+			"meta": {
+				"language": "Python",
+				"stars": 9637,
+				"forks": 635,
+				"stars_period": "6,245 stars this week"
+			}
+		},
+		{
+			"id": "github-weekly-3-microsoft-markitdown",
+			"source_id": "github-weekly",
+			"source": "GitHub Trending Weekly",
+			"category": "开源趋势-每周热点",
+			"title": "microsoft/markitdown",
+			"url": "https://github.com/microsoft/markitdown",
+			"published_at": "",
+			"summary": "Python tool for converting files and office documents to Markdown. | 语言: Python | Stars: 142,822 | Forks: 9,760 | 17,108 stars this week",
+			"backend_focus": "先看项目的 README、许可证、维护频率和接入成本，再判断是否值得进入技术雷达。",
+			"meta": {
+				"language": "Python",
+				"stars": 142822,
+				"forks": 9760,
+				"stars_period": "17,108 stars this week"
+			}
+		},
+		{
+			"id": "github-weekly-4-lum1104-understand-anything",
+			"source_id": "github-weekly",
+			"source": "GitHub Trending Weekly",
+			"category": "开源趋势-每周热点",
+			"title": "Lum1104/Understand-Anything",
+			"url": "https://github.com/Lum1104/Understand-Anything",
+			"published_at": "",
+			"summary": "Graphs that teach > graphs that impress. Turn any code into an interactive knowledge graph you can explore, search, and ask questions about. Works with Claude Code, Codex, Cursor, Copilot, Gemini CLI, and more. | 语言: TypeScript | Stars: 51,102 | Forks: 4,171 | 12,726 stars this week",
+			"backend_focus": "先看项目的 README、许可证、维护频率和接入成本，再判断是否值得进入技术雷达。",
+			"meta": {
+				"language": "TypeScript",
+				"stars": 51102,
+				"forks": 4171,
+				"stars_period": "12,726 stars this week"
+			}
+		},
+		{
+			"id": "github-weekly-5-revfactory-harness",
+			"source_id": "github-weekly",
+			"source": "GitHub Trending Weekly",
+			"category": "开源趋势-每周热点",
+			"title": "revfactory/harness",
+			"url": "https://github.com/revfactory/harness",
+			"published_at": "",
+			"summary": "A meta-skill that designs domain-specific agent teams, defines specialized agents, and generates the skills they use. | 语言: HTML | Stars: 5,689 | Forks: 761 | 2,005 stars this week",
+			"backend_focus": "先看项目的 README、许可证、维护频率和接入成本，再判断是否值得进入技术雷达。",
+			"meta": {
+				"language": "HTML",
+				"stars": 5689,
+				"forks": 761,
+				"stars_period": "2,005 stars this week"
+			}
+		},
+		{
+			"id": "github-weekly-6-hardikpandya-stop-slop",
+			"source_id": "github-weekly",
+			"source": "GitHub Trending Weekly",
+			"category": "开源趋势-每周热点",
+			"title": "hardikpandya/stop-slop",
+			"url": "https://github.com/hardikpandya/stop-slop",
+			"published_at": "",
+			"summary": "A skill file for removing AI tells from prose | 语言: N/A | Stars: 8,529 | Forks: 595 | 3,103 stars this week",
+			"backend_focus": "先看项目的 README、许可证、维护频率和接入成本，再判断是否值得进入技术雷达。",
+			"meta": {
+				"language": "",
+				"stars": 8529,
+				"forks": 595,
+				"stars_period": "3,103 stars this week"
+			}
+		},
+		{
+			"id": "github-weekly-7-everyinc-compound-engineering-plugin",
+			"source_id": "github-weekly",
+			"source": "GitHub Trending Weekly",
+			"category": "开源趋势-每周热点",
+			"title": "EveryInc/compound-engineering-plugin",
+			"url": "https://github.com/EveryInc/compound-engineering-plugin",
+			"published_at": "",
+			"summary": "Official Compound Engineering plugin for Claude Code, Codex, Cursor, and more | 语言: TypeScript | Stars: 19,597 | Forks: 1,454 | 2,116 stars this week",
+			"backend_focus": "先看项目的 README、许可证、维护频率和接入成本，再判断是否值得进入技术雷达。",
+			"meta": {
+				"language": "TypeScript",
+				"stars": 19597,
+				"forks": 1454,
+				"stars_period": "2,116 stars this week"
+			}
+		},
+		{
+			"id": "github-weekly-8-leonxlnx-taste-skill",
+			"source_id": "github-weekly",
+			"source": "GitHub Trending Weekly",
+			"category": "开源趋势-每周热点",
+			"title": "Leonxlnx/taste-skill",
+			"url": "https://github.com/Leonxlnx/taste-skill",
+			"published_at": "",
+			"summary": "Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop | 语言: Shell | Stars: 32,497 | Forks: 2,389 | 9,084 stars this week",
+			"backend_focus": "先看项目的 README、许可证、维护频率和接入成本，再判断是否值得进入技术雷达。",
+			"meta": {
+				"language": "Shell",
+				"stars": 32497,
+				"forks": 2389,
+				"stars_period": "9,084 stars this week"
+			}
+		},
+		{
+			"id": "github-weekly-9-supermemoryai-supermemory",
+			"source_id": "github-weekly",
+			"source": "GitHub Trending Weekly",
+			"category": "开源趋势-每周热点",
+			"title": "supermemoryai/supermemory",
+			"url": "https://github.com/supermemoryai/supermemory",
+			"published_at": "",
+			"summary": "Memory engine and app that is extremely fast, scalable. The Memory API for the AI era. | 语言: TypeScript | Stars: 25,151 | Forks: 2,208 | 2,260 stars this week",
+			"backend_focus": "先看项目的 README、许可证、维护频率和接入成本，再判断是否值得进入技术雷达。",
+			"meta": {
+				"language": "TypeScript",
+				"stars": 25151,
+				"forks": 2208,
+				"stars_period": "2,260 stars this week"
+			}
+		},
+		{
+			"id": "github-weekly-10-colbymchenry-codegraph",
+			"source_id": "github-weekly",
+			"source": "GitHub Trending Weekly",
+			"category": "开源趋势-每周热点",
+			"title": "colbymchenry/codegraph",
+			"url": "https://github.com/colbymchenry/codegraph",
+			"published_at": "",
+			"summary": "Pre-indexed code knowledge graph for Claude Code, Codex, Gemini, Cursor, OpenCode, AntiGravity, Kiro, and Hermes Agent — fewer tokens, fewer tool calls, 100% local | 语言: TypeScript | Stars: 39,275 | Forks: 2,441 | 9,796 stars this week",
+			"backend_focus": "先看项目的 README、许可证、维护频率和接入成本，再判断是否值得进入技术雷达。",
+			"meta": {
+				"language": "TypeScript",
+				"stars": 39275,
+				"forks": 2441,
+				"stars_period": "9,796 stars this week"
+			}
+		},
+		{
+			"id": "hacker-news-1-elixir-v1-20-now-a-gradually-typed-language",
+			"source_id": "hacker-news",
+			"source": "Hacker News",
+			"category": "社区讨论",
+			"title": "Elixir v1.20: Now a gradually typed language",
+			"url": "https://elixir-lang.org/blog/2026/06/03/elixir-v1-20-0-released/",
+			"published_at": "1780513346",
+			"summary": "分数: 475 | 评论数: 166 | 作者: cloud8421",
+			"backend_focus": "把社区争议当作早期风险信号，重点看评论里暴露的真实工程约束。",
+			"meta": {
+				"score": 475,
+				"comments": 166,
+				"hn_url": "https://news.ycombinator.com/item?id=48388324"
+			}
+		},
+		{
+			"id": "hacker-news-2-gemma-4-12b-a-unified-encoder-free-multimodal-mo",
+			"source_id": "hacker-news",
+			"source": "Hacker News",
+			"category": "社区讨论",
+			"title": "Gemma 4 12B: A unified, encoder-free multimodal model",
+			"url": "https://blog.google/innovation-and-ai/technology/developers-tools/introducing-gemma-4-12b/",
+			"published_at": "1780502682",
+			"summary": "分数: 638 | 评论数: 270 | 作者: rvz",
+			"backend_focus": "把社区争议当作早期风险信号，重点看评论里暴露的真实工程约束。",
+			"meta": {
+				"score": 638,
+				"comments": 270,
+				"hn_url": "https://news.ycombinator.com/item?id=48385906"
+			}
+		},
+		{
+			"id": "hacker-news-3-i-was-recently-diagnosed-with-anti-nmda-receptor",
+			"source_id": "hacker-news",
+			"source": "Hacker News",
+			"category": "社区讨论",
+			"title": "I was recently diagnosed with anti-NMDA receptor encephalitis",
+			"url": "https://burntsushi.net/encephalitis/",
+			"published_at": "1780495806",
+			"summary": "分数: 453 | 评论数: 127 | 作者: Tomte",
+			"backend_focus": "把社区争议当作早期风险信号，重点看评论里暴露的真实工程约束。",
+			"meta": {
+				"score": 453,
+				"comments": 127,
+				"hn_url": "https://news.ycombinator.com/item?id=48384355"
+			}
+		},
+		{
+			"id": "hacker-news-4-davinci-resolve-21",
+			"source_id": "hacker-news",
+			"source": "Hacker News",
+			"category": "社区讨论",
+			"title": "DaVinci Resolve 21",
+			"url": "https://www.blackmagicdesign.com/products/davinciresolve/whatsnew",
+			"published_at": "1780496319",
+			"summary": "分数: 371 | 评论数: 175 | 作者: pentagrama",
+			"backend_focus": "把社区争议当作早期风险信号，重点看评论里暴露的真实工程约束。",
+			"meta": {
+				"score": 371,
+				"comments": 175,
+				"hn_url": "https://news.ycombinator.com/item?id=48384482"
+			}
+		},
+		{
+			"id": "hacker-news-5-artificial-intelligence-is-not-conscious-ted-chi",
+			"source_id": "hacker-news",
+			"source": "Hacker News",
+			"category": "社区讨论",
+			"title": "Artificial intelligence is not conscious – Ted Chiang",
+			"url": "https://www.theatlantic.com/philosophy/2026/06/no-artificial-intelligence-is-not-conscious/687378/",
+			"published_at": "1780509097",
+			"summary": "分数: 160 | 评论数: 249 | 作者: lordleft",
+			"backend_focus": "把社区争议当作早期风险信号，重点看评论里暴露的真实工程约束。",
+			"meta": {
+				"score": 160,
+				"comments": 249,
+				"hn_url": "https://news.ycombinator.com/item?id=48387270"
+			}
+		},
+		{
+			"id": "hacker-news-6-uber-s-1-500-month-ai-limit-is-a-useful-signal-f",
+			"source_id": "hacker-news",
+			"source": "Hacker News",
+			"category": "社区讨论",
+			"title": "Uber's $1,500/month AI limit is a useful signal for AI tool pricing",
+			"url": "https://simonwillison.net/2026/Jun/3/uber-caps-usage/",
+			"published_at": "1780489514",
+			"summary": "分数: 339 | 评论数: 432 | 作者: pdyc",
+			"backend_focus": "把社区争议当作早期风险信号，重点看评论里暴露的真实工程约束。",
+			"meta": {
+				"score": 339,
+				"comments": 432,
+				"hn_url": "https://news.ycombinator.com/item?id=48383056"
+			}
+		},
+		{
+			"id": "hacker-news-7-ableton-extensions-sdk",
+			"source_id": "hacker-news",
+			"source": "Hacker News",
+			"category": "社区讨论",
+			"title": "Ableton Extensions SDK",
+			"url": "https://www.ableton.com/en/live/extensions/",
+			"published_at": "1780519174",
+			"summary": "分数: 50 | 评论数: 20 | 作者: bennett_dev",
+			"backend_focus": "把社区争议当作早期风险信号，重点看评论里暴露的真实工程约束。",
+			"meta": {
+				"score": 50,
+				"comments": 20,
+				"hn_url": "https://news.ycombinator.com/item?id=48389681"
+			}
+		},
+		{
+			"id": "hacker-news-8-gooey-a-gpu-accelerated-ui-framework-for-zig",
+			"source_id": "hacker-news",
+			"source": "Hacker News",
+			"category": "社区讨论",
+			"title": "Gooey: A GPU-accelerated UI framework for Zig",
+			"url": "https://github.com/duanebester/gooey",
+			"published_at": "1780506747",
+			"summary": "分数: 128 | 评论数: 40 | 作者: ksec",
+			"backend_focus": "把社区争议当作早期风险信号，重点看评论里暴露的真实工程约束。",
+			"meta": {
+				"score": 128,
+				"comments": 40,
+				"hn_url": "https://news.ycombinator.com/item?id=48386725"
+			}
+		},
+		{
+			"id": "hacker-news-9-pwnd-blaster-hacking-your-pc-using-your-speaker-",
+			"source_id": "hacker-news",
+			"source": "Hacker News",
+			"category": "社区讨论",
+			"title": "Pwnd Blaster: Hacking your PC using your speaker without ever touching it",
+			"url": "https://blog.nns.ee/2026/06/03/katana-badusb/",
+			"published_at": "1780483980",
+			"summary": "分数: 633 | 评论数: 99 | 作者: xx_ns",
+			"backend_focus": "把社区争议当作早期风险信号，重点看评论里暴露的真实工程约束。",
+			"meta": {
+				"score": 633,
+				"comments": 99,
+				"hn_url": "https://news.ycombinator.com/item?id=48382310"
+			}
+		},
+		{
+			"id": "hacker-news-10-journey-to-jpeg-xl-open-source-experiments-shape",
+			"source_id": "hacker-news",
+			"source": "Hacker News",
+			"category": "社区讨论",
+			"title": "Journey to JPEG XL: open-source experiments shaped the future of image coding",
+			"url": "https://opensource.googleblog.com/2026/06/journey-to-jpeg-xl-how-open-source-experiments-shaped-the-future-of-image-coding.html",
+			"published_at": "1780523723",
+			"summary": "分数: 19 | 评论数: 12 | 作者: ledoge",
+			"backend_focus": "把社区争议当作早期风险信号，重点看评论里暴露的真实工程约束。",
+			"meta": {
+				"score": 19,
+				"comments": 12,
+				"hn_url": "https://news.ycombinator.com/item?id=48390688"
+			}
+		},
+		{
+			"id": "v2ex-1-大龄女测试被裁好难啊-求出路建议",
+			"source_id": "v2ex",
+			"source": "V2EX",
+			"category": "社区讨论",
+			"title": "大龄女测试被裁好难啊，求出路建议",
+			"url": "https://www.v2ex.com/t/1217561",
+			"published_at": "1780462351",
+			"summary": "节点: 职场话题 | 作者: suikatw",
+			"backend_focus": "把中文社区反馈当作使用现场样本，关注升级摩擦、工具稳定性和团队采纳成本。",
+			"meta": {
+				"node": "career",
+				"node_title": "职场话题",
+				"replies_count": 10,
+				"v2ex_url": "https://www.v2ex.com/t/1217561"
+			}
+		},
+		{
+			"id": "v2ex-2-慎重升级-codex-最新版-26-601-21317",
+			"source_id": "v2ex",
+			"source": "V2EX",
+			"category": "社区讨论",
+			"title": "⚠️慎重升级 Codex 最新版（26.601.21317）",
+			"url": "https://www.v2ex.com/t/1217473",
+			"published_at": "1780448957",
+			"summary": "节点: 程序员 | 作者: LonelyM",
+			"backend_focus": "把中文社区反馈当作使用现场样本，关注升级摩擦、工具稳定性和团队采纳成本。",
+			"meta": {
+				"node": "programmer",
+				"node_title": "程序员",
+				"replies_count": 10,
+				"v2ex_url": "https://www.v2ex.com/t/1217473"
+			}
+		},
+		{
+			"id": "v2ex-3-婚后-10-年-你们的生活也这样吗",
+			"source_id": "v2ex",
+			"source": "V2EX",
+			"category": "社区讨论",
+			"title": "婚后 10 年，你们的生活也这样吗？",
+			"url": "https://www.v2ex.com/t/1217516",
+			"published_at": "1780454153",
+			"summary": "节点: 生活 | 作者: FanDeBiao",
+			"backend_focus": "把中文社区反馈当作使用现场样本，关注升级摩擦、工具稳定性和团队采纳成本。",
+			"meta": {
+				"node": "life",
+				"node_title": "生活",
+				"replies_count": 10,
+				"v2ex_url": "https://www.v2ex.com/t/1217516"
+			}
+		},
+		{
+			"id": "v2ex-4-被裁两个月后-聊聊感想-发点照片",
+			"source_id": "v2ex",
+			"source": "V2EX",
+			"category": "社区讨论",
+			"title": "被裁两个月后，聊聊感想，发点照片",
+			"url": "https://www.v2ex.com/t/1217461",
+			"published_at": "1780447236",
+			"summary": "节点: 旅行 | 作者: timespy",
+			"backend_focus": "把中文社区反馈当作使用现场样本，关注升级摩擦、工具稳定性和团队采纳成本。",
+			"meta": {
+				"node": "travel",
+				"node_title": "旅行",
+				"replies_count": 10,
+				"v2ex_url": "https://www.v2ex.com/t/1217461"
+			}
+		},
+		{
+			"id": "v2ex-5-被当老头崩了怎么办-还需要继续吗",
+			"source_id": "v2ex",
+			"source": "V2EX",
+			"category": "社区讨论",
+			"title": "被当老头崩了怎么办？还需要继续吗？",
+			"url": "https://www.v2ex.com/t/1217480",
+			"published_at": "1780449526",
+			"summary": "节点: 情感问题 | 作者: 052678",
+			"backend_focus": "把中文社区反馈当作使用现场样本，关注升级摩擦、工具稳定性和团队采纳成本。",
+			"meta": {
+				"node": "libido",
+				"node_title": "情感问题",
+				"replies_count": 10,
+				"v2ex_url": "https://www.v2ex.com/t/1217480"
+			}
+		},
+		{
+			"id": "v2ex-6-兄弟们-求助怎么阻止狗日的业委会成立",
+			"source_id": "v2ex",
+			"source": "V2EX",
+			"category": "社区讨论",
+			"title": "兄弟们，求助怎么阻止狗日的业委会成立？",
+			"url": "https://www.v2ex.com/t/1217522",
+			"published_at": "1780454718",
+			"summary": "节点: 成都 | 作者: 987N",
+			"backend_focus": "把中文社区反馈当作使用现场样本，关注升级摩擦、工具稳定性和团队采纳成本。",
+			"meta": {
+				"node": "chengdu",
+				"node_title": "成都",
+				"replies_count": 10,
+				"v2ex_url": "https://www.v2ex.com/t/1217522"
+			}
+		},
+		{
+			"id": "v2ex-7-好奇有人每天裸用-macbook-吗",
+			"source_id": "v2ex",
+			"source": "V2EX",
+			"category": "社区讨论",
+			"title": "好奇有人每天裸用 macbook 吗？",
+			"url": "https://www.v2ex.com/t/1217478",
+			"published_at": "1780449389",
+			"summary": "节点: MacBook Air | 作者: eventlooped",
+			"backend_focus": "把中文社区反馈当作使用现场样本，关注升级摩擦、工具稳定性和团队采纳成本。",
+			"meta": {
+				"node": "mba",
+				"node_title": "MacBook Air",
+				"replies_count": 10,
+				"v2ex_url": "https://www.v2ex.com/t/1217478"
+			}
+		},
+		{
+			"id": "v2ex-8-造福-v-站-免费指导-写傲娇-l-站的申请小作文-我申请了-5-次才通过",
+			"source_id": "v2ex",
+			"source": "V2EX",
+			"category": "社区讨论",
+			"title": "造福 V 站， [免费指导] 写傲娇 L 站的申请小作文！我申请了 5 次才通过！",
+			"url": "https://www.v2ex.com/t/1217479",
+			"published_at": "1780449428",
+			"summary": "节点: 互联网 | 作者: NeoWalnut",
+			"backend_focus": "把中文社区反馈当作使用现场样本，关注升级摩擦、工具稳定性和团队采纳成本。",
+			"meta": {
+				"node": "internet",
+				"node_title": "互联网",
+				"replies_count": 10,
+				"v2ex_url": "https://www.v2ex.com/t/1217479"
+			}
+		},
+		{
+			"id": "v2ex-9-群友们大多数作为过来人-有什么可以教给后来年轻人的吗",
+			"source_id": "v2ex",
+			"source": "V2EX",
+			"category": "社区讨论",
+			"title": "群友们大多数作为过来人，有什么可以教给后来年轻人的吗？",
+			"url": "https://www.v2ex.com/t/1217455",
+			"published_at": "1780445532",
+			"summary": "节点: 生活 | 作者: HaydenDeep",
+			"backend_focus": "把中文社区反馈当作使用现场样本，关注升级摩擦、工具稳定性和团队采纳成本。",
+			"meta": {
+				"node": "life",
+				"node_title": "生活",
+				"replies_count": 10,
+				"v2ex_url": "https://www.v2ex.com/t/1217455"
+			}
+		},
+		{
+			"id": "v2ex-10-你有没有一个小改变-从而养成了一个新习惯",
+			"source_id": "v2ex",
+			"source": "V2EX",
+			"category": "社区讨论",
+			"title": "你有没有一个小改变，从而养成了一个新习惯？",
+			"url": "https://www.v2ex.com/t/1217459",
+			"published_at": "1780446826",
+			"summary": "节点: 生活 | 作者: tty0",
+			"backend_focus": "把中文社区反馈当作使用现场样本，关注升级摩擦、工具稳定性和团队采纳成本。",
+			"meta": {
+				"node": "life",
+				"node_title": "生活",
+				"replies_count": 10,
+				"v2ex_url": "https://www.v2ex.com/t/1217459"
+			}
+		},
+		{
+			"id": "tldr-ai-1-codex-new-capabilities-6-minute-read",
+			"source_id": "tldr-ai",
+			"source": "TLDR AI",
+			"category": "AI 快讯",
+			"title": "Codex new Capabilities (6 minute read)",
+			"url": "https://links.tldrnewsletter.com/NYf8bT",
+			"published_at": "",
+			"summary": "OpenAI released new Codex capabilities and six role-specific plug-ins for data analytics, creative production, sales, product design, equity investing, and investment banking.",
+			"backend_focus": "快速判断是否影响模型选型、工具链预算或产品路线，值得的再追原文。",
+			"meta": {}
+		},
+		{
+			"id": "tldr-ai-2-building-a-hill-climbing-machine-launching-seven",
+			"source_id": "tldr-ai",
+			"source": "TLDR AI",
+			"category": "AI 快讯",
+			"title": "Building a hill-climbing machine: Launching seven new MAI models (5 minute read)",
+			"url": "https://microsoft.ai/news/building-a-hillclimbing-machine-launching-seven-new-mai-models/?utm_source=tldrai",
+			"published_at": "",
+			"summary": "Microsoft released seven new MAI models, enabling developers to tune model weights themselves and integrate these into everyday products. The models leverage Frontier Tuning, an approach where AI adapts to specific workflows through reinforcement learning environments. Microsoft also announced a collaboration with Mayo Clinic to develop an advanced AI healthcare model, combining clinical expertise with AI capabilities, initially deploying within Mayo before wider distribution through Azure Foundry.",
+			"backend_focus": "快速判断是否影响模型选型、工具链预算或产品路线，值得的再追原文。",
+			"meta": {}
+		},
+		{
+			"id": "tldr-ai-3-minimax-promises-m3-weights-after-1m-context-mod",
+			"source_id": "tldr-ai",
+			"source": "TLDR AI",
+			"category": "AI 快讯",
+			"title": "MiniMax promises M3 weights after 1M-context model launch (2 minute read)",
+			"url": "https://www.implicator.ai/minimax-promises-m3-weights-after-1m-context-model-launch/?utm_source=tldrai",
+			"published_at": "",
+			"summary": "MiniMax will release the model weights and a technical report for its M3 model within the next 10 days. The new model is currently available through MiniMax Code, token plans, and an API. It has a 1M-token context window and a guaranteed 512,000-token minimum for API use. The model is the first open-weight model to combine frontier coding, native multimodality, and a 1M-token context window. MiniMax lists standard API pricing up to 512,000 input tokens at $0.60 per million input and $2.40 per million output.",
+			"backend_focus": "快速判断是否影响模型选型、工具链预算或产品路线，值得的再追原文。",
+			"meta": {}
+		},
+		{
+			"id": "tldr-ai-4-open-and-closed-models-are-on-different-exponent",
+			"source_id": "tldr-ai",
+			"source": "TLDR AI",
+			"category": "AI 快讯",
+			"title": "Open and closed models are on different exponentials (8 minute read)",
+			"url": "https://www.interconnects.ai/p/open-and-closed-models-are-on-different?utm_source=tldrai",
+			"published_at": "",
+			"summary": "A lot of businesses want to switch to open models, but these models aren't yet good enough in out-of-distribution tasks. However, they will eventually catch up. The open model ecosystem will be far more diverse and numerous than the closed lab oligopoly. The total market value of the open model economy will dramatically exceed the cumulative value of OpenAI and Anthropic.",
+			"backend_focus": "快速判断是否影响模型选型、工具链预算或产品路线，值得的再追原文。",
+			"meta": {}
+		},
+		{
+			"id": "tldr-ai-5-the-next-frontier-of-visual-ai-is-code-11-minute",
+			"source_id": "tldr-ai",
+			"source": "TLDR AI",
+			"category": "AI 快讯",
+			"title": "The Next Frontier of Visual AI Is Code (11 minute read)",
+			"url": "https://a16z.com/the-next-frontier-of-visual-ai-is-code/?utm_source=tldrai",
+			"published_at": "",
+			"summary": "Visual AI is shifting from generating final pixel outputs to creating source code for editable artifacts, transforming workflows in design and 3D modeling by enabling continuous iteration and feedback. Code-native generation produces structured representations such as HTML/CSS or Blender scripts, facilitating precise edits and enhancements post-generation. This approach holds promise for industries requiring consistent 3D structures and interactive assets, with visual AI moving towards creating adaptive, editable digital artifacts rather than just static images.",
+			"backend_focus": "快速判断是否影响模型选型、工具链预算或产品路线，值得的再追原文。",
+			"meta": {}
+		},
+		{
+			"id": "tldr-ai-6-memory-is-purpose-15-minute-read",
+			"source_id": "tldr-ai",
+			"source": "TLDR AI",
+			"category": "AI 快讯",
+			"title": "Memory Is Purpose (15 minute read)",
+			"url": "https://links.tldrnewsletter.com/lGYiBw",
+			"published_at": "",
+			"summary": "Sentra CEO Ashwin Gopinath argues memory is not a sidecar to intelligence but the layer that decides what reality the reasoning operates on, with knowledge being what was present and memory being the subset of the past that should survive because it changes future behavior. The boulder problem illustrates that the same artifact becomes different memory for sales, product, legal, engineering, and CEO views, so freezing ontology at ingestion traps the system inside a frame that is prematurely right.",
+			"backend_focus": "快速判断是否影响模型选型、工具链预算或产品路线，值得的再追原文。",
+			"meta": {}
+		},
+		{
+			"id": "tldr-ai-7-the-data-center-moves-to-your-machine-4-minute-r",
+			"source_id": "tldr-ai",
+			"source": "TLDR AI",
+			"category": "AI 快讯",
+			"title": "The Data Center Moves to Your Machine (4 minute read)",
+			"url": "https://links.tldrnewsletter.com/QY82aZ",
+			"published_at": "",
+			"summary": "Perplexity unveiled a hybrid local-cloud inference system at Computex 2026 that intelligently routes queries between on-device models for lightweight tasks and cloud-based models for complex reasoning, building on the company's earlier Personal Computer agent.",
+			"backend_focus": "快速判断是否影响模型选型、工具链预算或产品路线，值得的再追原文。",
+			"meta": {}
+		},
+		{
+			"id": "tldr-ai-8-preventing-ai-inference-theft-at-scale-5-minute-",
+			"source_id": "tldr-ai",
+			"source": "TLDR AI",
+			"category": "AI 快讯",
+			"title": "Preventing AI Inference Theft at Scale (5 minute read)",
+			"url": "https://vercel.com/blog/protecting-against-token-theft?utm_source=tldrai",
+			"published_at": "",
+			"summary": "Vercel outlined how attackers resell stolen AI inference by exploiting exposed endpoints and highlighted why traditional rate limits are often insufficient. The post describes an approach that verifies every AI request using BotID analysis to reduce abuse.",
+			"backend_focus": "快速判断是否影响模型选型、工具链预算或产品路线，值得的再追原文。",
+			"meta": {}
+		},
+		{
+			"id": "tldr-ai-9-wall-attention-github-repo",
+			"source_id": "tldr-ai",
+			"source": "TLDR AI",
+			"category": "AI 快讯",
+			"title": "Wall Attention (GitHub Repo)",
+			"url": "https://github.com/tilde-research/wall-attention-release?utm_source=tldrai",
+			"published_at": "",
+			"summary": "An attention mechanism that improves long-context reasoning by organizing information around persistent “wall” memory tokens.",
+			"backend_focus": "快速判断是否影响模型选型、工具链预算或产品路线，值得的再追原文。",
+			"meta": {}
+		},
+		{
+			"id": "tldr-ai-10-github-s-plan-for-agents-90-minute-read",
+			"source_id": "tldr-ai",
+			"source": "TLDR AI",
+			"category": "AI 快讯",
+			"title": "GitHub's plan for Agents (90 minute read)",
+			"url": "https://www.latent.space/p/github?utm_source=tldrai",
+			"published_at": "",
+			"summary": "GitHub has been the home for software for almost two decades. Coding agents have seen massive quantities of code being shipped on the platform, which has grown 1,400% this year. This has put pressure on GitHub's infrastructure, which was designed around human developers moving at human speed. This article features an interview with GitHub COO Kyle Daigle where he discusses how AI has changed things in the company, how he uses AI to work at GitHub, why the AI era is breaking GitHub in new ways, and more.",
+			"backend_focus": "快速判断是否影响模型选型、工具链预算或产品路线，值得的再追原文。",
+			"meta": {}
+		},
+		{
+			"id": "openai-1-introducing-new-capabilities-to-gpt-rosalind",
+			"source_id": "openai",
+			"source": "OpenAI",
+			"category": "Product",
+			"title": "Introducing new capabilities to GPT-Rosalind",
+			"url": "https://openai.com/index/introducing-new-capabilities-to-gpt-rosalind",
+			"published_at": "Wed, 03 Jun 2026 13:15:00 GMT",
+			"summary": "GPT-Rosalind advances life sciences research with enhanced biological reasoning, medicinal chemistry expertise, genomics analysis, and experimental workflow capabilities.",
+			"backend_focus": "官方更新先看能力边界、价格/权限变化和企业接入要求，不只看发布标题。",
+			"meta": {
+				"content_type": "Product"
+			}
+		},
+		{
+			"id": "openai-2-how-wasmer-used-codex-to-build-a-node-js-runtime",
+			"source_id": "openai",
+			"source": "OpenAI",
+			"category": "AI 官方更新",
+			"title": "How Wasmer used Codex to build a Node.js runtime for the edge",
+			"url": "https://openai.com/index/wasmer",
+			"published_at": "Wed, 03 Jun 2026 12:00:00 GMT",
+			"summary": "See how Wasmer used Codex with GPT-5.5 to build a Node.js runtime for the edge, accelerating development 10x to 20x and shipping in weeks instead of months.",
+			"backend_focus": "官方更新先看能力边界、价格/权限变化和企业接入要求，不只看发布标题。",
+			"meta": {}
+		},
+		{
+			"id": "openai-3-openai-public-policy-agenda",
+			"source_id": "openai",
+			"source": "OpenAI",
+			"category": "Global Affairs",
+			"title": "OpenAI public policy agenda",
+			"url": "https://openai.com/index/public-policy-agenda",
+			"published_at": "Wed, 03 Jun 2026 10:00:00 GMT",
+			"summary": "OpenAI outlines its public policy agenda for AI, including safety, youth protection, workforce transition, and global standards to ensure AI benefits society.",
+			"backend_focus": "官方更新先看能力边界、价格/权限变化和企业接入要求，不只看发布标题。",
+			"meta": {}
+		},
+		{
+			"id": "openai-4-a-blueprint-for-democratic-governance-of-frontie",
+			"source_id": "openai",
+			"source": "OpenAI",
+			"category": "Global Affairs",
+			"title": "A blueprint for democratic governance of frontier AI",
+			"url": "https://openai.com/index/frontier-safety-blueprint",
+			"published_at": "Wed, 03 Jun 2026 10:00:00 GMT",
+			"summary": "OpenAI outlines a blueprint for U.S. governance of frontier AI, proposing a federal framework for safety, resilience, and national security.",
+			"backend_focus": "官方更新先看能力边界、价格/权限变化和企业接入要求，不只看发布标题。",
+			"meta": {}
+		},
+		{
+			"id": "openai-5-travelers-deploys-ai-powered-claims-countrywide-",
+			"source_id": "openai",
+			"source": "OpenAI",
+			"category": "AI 官方更新",
+			"title": "Travelers deploys AI-powered claims countrywide with OpenAI",
+			"url": "https://openai.com/index/travelers",
+			"published_at": "Tue, 02 Jun 2026 12:00:00 GMT",
+			"summary": "Travelers built an AI-powered Claim Assistant with OpenAI to guide customers through filing claims, provide 24/7 support, and scale operations during peak demand.",
+			"backend_focus": "官方更新先看能力边界、价格/权限变化和企业接入要求，不只看发布标题。",
+			"meta": {}
+		},
+		{
+			"id": "openai-6-codex-for-every-role-tool-and-workflow",
+			"source_id": "openai",
+			"source": "OpenAI",
+			"category": "Product",
+			"title": "Codex for every role, tool, and workflow",
+			"url": "https://openai.com/index/codex-for-every-role-tool-workflow",
+			"published_at": "Tue, 02 Jun 2026 09:00:00 GMT",
+			"summary": "Discover new Codex plugins, sites, and annotations that help analysts, marketers, designers, investors, and other teams get more done with AI.",
+			"backend_focus": "官方更新先看能力边界、价格/权限变化和企业接入要求，不只看发布标题。",
+			"meta": {
+				"content_type": "Product"
+			}
+		},
+		{
+			"id": "openai-7-advancing-youth-safety-and-opportunity-through-g",
+			"source_id": "openai",
+			"source": "OpenAI",
+			"category": "Global Affairs",
+			"title": "Advancing youth safety and opportunity through global leadership",
+			"url": "https://openai.com/index/advancing-youth-safety-and-opportunity-through-global-leadership",
+			"published_at": "Tue, 02 Jun 2026 07:00:00 GMT",
+			"summary": "OpenAI calls for global action on youth AI safety, proposing an international institute to strengthen safeguards, standards, and opportunities for young people.",
+			"backend_focus": "官方更新先看能力边界、价格/权限变化和企业接入要求，不只看发布标题。",
+			"meta": {}
+		},
+		{
+			"id": "openai-8-codex-is-becoming-a-productivity-tool-for-everyo",
+			"source_id": "openai",
+			"source": "OpenAI",
+			"category": "Global Affairs",
+			"title": "Codex is becoming a productivity tool for everyone",
+			"url": "https://openai.com/index/codex-for-knowledge-work",
+			"published_at": "Tue, 02 Jun 2026 02:00:00 GMT",
+			"summary": "The Next Era of Knowledge Work report explores how Codex is transforming productivity through AI-powered research, data analysis, workflow automation, and content creation.",
+			"backend_focus": "官方更新先看能力边界、价格/权限变化和企业接入要求，不只看发布标题。",
+			"meta": {}
+		},
+		{
+			"id": "openai-9-our-views-on-ai-policy-and-political-advocacy",
+			"source_id": "openai",
+			"source": "OpenAI",
+			"category": "Global Affairs",
+			"title": "Our views on AI policy and political advocacy",
+			"url": "https://openai.com/index/our-views-on-ai-policy-and-political-advocacy",
+			"published_at": "Mon, 01 Jun 2026 17:00:00 GMT",
+			"summary": "Our approach to AI policy and political advocacy, transparency, support for thoughtful regulation and AI safety, and that no outside political group speaks on the company’s behalf.",
+			"backend_focus": "官方更新先看能力边界、价格/权限变化和企业接入要求，不只看发布标题。",
+			"meta": {}
+		},
+		{
+			"id": "openai-10-building-the-infrastructure-for-the-intelligence",
+			"source_id": "openai",
+			"source": "OpenAI",
+			"category": "Global Affairs",
+			"title": "Building the infrastructure for the Intelligence Age in Michigan",
+			"url": "https://openai.com/index/stargate-michigan-data-center",
+			"published_at": "Mon, 01 Jun 2026 12:00:00 GMT",
+			"summary": "OpenAI breaks ground on a 1GW data center project in Michigan as part of Stargate, building AI infrastructure to expand access, create jobs, and support communities.",
+			"backend_focus": "官方更新先看能力边界、价格/权限变化和企业接入要求，不只看发布标题。",
+			"meta": {}
+		},
+		{
+			"id": "anthropic-1-introducing-claude-opus-4-8",
+			"source_id": "anthropic",
+			"source": "Anthropic",
+			"category": "AI 官方更新",
+			"title": "Introducing Claude Opus 4.8",
+			"url": "https://www.anthropic.com/news/claude-opus-4-8",
+			"published_at": "May 28, 2026",
+			"summary": "An upgrade to our Opus class of models, with stronger performance across coding, agentic tasks, and professional work, and the consistency to handle long-running work.",
+			"backend_focus": "官方更新先看能力边界、价格/权限变化和企业接入要求，不只看发布标题。",
+			"meta": {
+				"content_type": "Product"
+			}
+		},
+		{
+			"id": "anthropic-2-introducing-claude-design-by-anthropic-labs-toda",
+			"source_id": "anthropic",
+			"source": "Anthropic",
+			"category": "AI 官方更新",
+			"title": "Introducing Claude Design by Anthropic Labs Today, we’re launching Claude Design, a new Anthropic Labs product that lets you collaborate with Claude to create p",
+			"url": "https://www.anthropic.com/news/claude-design-anthropic-labs",
+			"published_at": "Apr 17, 2026",
+			"summary": "olished visual work like designs, prototypes, slides, one-pagers, and more. Announcements  Project Glasswing A new initiative that brings together Amazon Web Services, Anthropic, Apple, Broadcom, Cisco, CrowdStrike, Google, JPMorganChase, the Linux Foundation, Microsoft, NVIDIA, and Palo Alto Networks in an effort to secure the world's most critical software.  What 81,000 people want from AI We invited Claude.ai users to share how they use AI, what they dream it could make possible, and what the...",
+			"backend_focus": "官方更新先看能力边界、价格/权限变化和企业接入要求，不只看发布标题。",
+			"meta": {
+				"content_type": "Product"
+			}
+		},
+		{
+			"id": "anthropic-3-claude-is-a-space-to-think-we-ve-made-a-choice-c",
+			"source_id": "anthropic",
+			"source": "Anthropic",
+			"category": "AI 官方更新",
+			"title": "Claude is a space to think We’ve made a choice: Claude will remain ad-free. We explain why advertising incentives are incompatible with a genuinely helpful AI a",
+			"url": "https://www.anthropic.com/news/claude-is-a-space-to-think",
+			"published_at": "Apr 17, 2026",
+			"summary": "Introducing Claude Design by Anthropic Labs Today, we’re launching Claude Design, a new Anthropic Labs product that lets you collaborate with Claude to create polished visual work like designs, prototypes, slides, one-pagers, and more. Announcements  Project Glasswing A new initiative that brings together Amazon Web Services, Anthropic, Apple, Broadcom, Cisco, CrowdStrike, Google, JPMorganChase, the Linux Foundation, Microsoft, NVIDIA, and Palo Alto Networks in an effort to secure the world's mo...",
+			"backend_focus": "官方更新先看能力边界、价格/权限变化和企业接入要求，不只看发布标题。",
+			"meta": {
+				"content_type": "Product"
+			}
+		},
+		{
+			"id": "anthropic-4-introducing-the-services-track-and-partner-hub-o",
+			"source_id": "anthropic",
+			"source": "Anthropic",
+			"category": "AI 官方更新",
+			"title": "Introducing the Services Track and Partner Hub of the Claude Partner Network",
+			"url": "https://www.anthropic.com/news/services-track-partner-hub",
+			"published_at": "Jun 3, 2026",
+			"summary": "Announcements",
+			"backend_focus": "官方更新先看能力边界、价格/权限变化和企业接入要求，不只看发布标题。",
+			"meta": {
+				"content_type": "Announcements"
+			}
+		},
+		{
+			"id": "anthropic-5-policy-what-we-learned-mapping-a-year-s-worth-of",
+			"source_id": "anthropic",
+			"source": "Anthropic",
+			"category": "AI 官方更新",
+			"title": "Policy What we learned mapping a year’s worth of AI-enabled cyber threats",
+			"url": "https://www.anthropic.com/news/AI-enabled-cyber-threats-mitre-attack",
+			"published_at": "Jun 3, 2026",
+			"summary": "Policy What we learned mapping a year’s worth of AI-enabled cyber threats",
+			"backend_focus": "官方更新先看能力边界、价格/权限变化和企业接入要求，不只看发布标题。",
+			"meta": {}
+		},
+		{
+			"id": "anthropic-6-expanding-project-glasswing",
+			"source_id": "anthropic",
+			"source": "Anthropic",
+			"category": "AI 官方更新",
+			"title": "Expanding Project Glasswing",
+			"url": "https://www.anthropic.com/news/expanding-project-glasswing",
+			"published_at": "Jun 2, 2026",
+			"summary": "Announcements",
+			"backend_focus": "官方更新先看能力边界、价格/权限变化和企业接入要求，不只看发布标题。",
+			"meta": {
+				"content_type": "Announcements"
+			}
+		},
+		{
+			"id": "anthropic-7-anthropic-confidentially-submits-draft-s-1-to-th",
+			"source_id": "anthropic",
+			"source": "Anthropic",
+			"category": "AI 官方更新",
+			"title": "Anthropic confidentially submits draft S-1 to the SEC",
+			"url": "https://www.anthropic.com/news/confidential-draft-s1-sec",
+			"published_at": "Jun 1, 2026",
+			"summary": "Announcements",
+			"backend_focus": "官方更新先看能力边界、价格/权限变化和企业接入要求，不只看发布标题。",
+			"meta": {
+				"content_type": "Announcements"
+			}
+		},
+		{
+			"id": "anthropic-8-anthropic-raises-65b-in-series-h-funding-at-965b",
+			"source_id": "anthropic",
+			"source": "Anthropic",
+			"category": "AI 官方更新",
+			"title": "Anthropic raises $65B in Series H funding at $965B post-money valuation",
+			"url": "https://www.anthropic.com/news/series-h",
+			"published_at": "May 28, 2026",
+			"summary": "Announcements",
+			"backend_focus": "官方更新先看能力边界、价格/权限变化和企业接入要求，不只看发布标题。",
+			"meta": {
+				"content_type": "Announcements"
+			}
+		},
+		{
+			"id": "anthropic-9-anthropic-opens-milan-office-to-support-italian-",
+			"source_id": "anthropic",
+			"source": "Anthropic",
+			"category": "AI 官方更新",
+			"title": "Anthropic opens Milan office to support Italian enterprise, research, and developers",
+			"url": "https://www.anthropic.com/news/milan-office-opening",
+			"published_at": "May 27, 2026",
+			"summary": "Announcements",
+			"backend_focus": "官方更新先看能力边界、价格/权限变化和企业接入要求，不只看发布标题。",
+			"meta": {
+				"content_type": "Announcements"
+			}
+		},
+		{
+			"id": "anthropic-10-anthropic-appoints-kiyoung-choi-as-representativ",
+			"source_id": "anthropic",
+			"source": "Anthropic",
+			"category": "AI 官方更新",
+			"title": "Anthropic appoints KiYoung Choi as Representative Director of Korea ahead of Seoul office opening",
+			"url": "https://www.anthropic.com/news/kiyoung-choi-representative-director-anthropic-korea",
+			"published_at": "May 26, 2026",
+			"summary": "Announcements",
+			"backend_focus": "官方更新先看能力边界、价格/权限变化和企业接入要求，不只看发布标题。",
+			"meta": {
+				"content_type": "Announcements"
+			}
+		},
+		{
+			"id": "infoq-1-ai-assisted-migration-tool-helps-teams-move-from",
+			"source_id": "infoq",
+			"source": "InfoQ AI Development",
+			"category": "AI Development",
+			"title": "AI-Assisted Migration Tool Helps Teams Move from ingress-nginx to Higress in Minutes",
+			"url": "https://www.infoq.com/news/2026/05/ai-nginx-higress/?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=AI+Development-news",
+			"published_at": "Fri, 29 May 2026 12:00:00 GMT",
+			"summary": "The Cloud Native Computing Foundation has highlighted a new AI-assisted migration approach that enabled engineers to migrate 60 ingress-nginx resources to Higress in roughly 30 minutes, demonstrating how artificial intelligence is increasingly being applied to modernize Kubernetes networking and gateway infrastructure. By Craig Risi",
+			"backend_focus": "工程实践内容适合沉淀为内部方案，重点补齐迁移、验证和回滚链路。",
+			"meta": {}
+		},
+		{
+			"id": "infoq-2-pullfrog-ai-open-source-coderabbit-alternative-p",
+			"source_id": "infoq",
+			"source": "InfoQ AI Development",
+			"category": "AI Assisted Coding",
+			"title": "Pullfrog AI: Open-Source CodeRabbit Alternative Powered by GitHub Actions",
+			"url": "https://www.infoq.com/news/2026/05/pullfrog-ai-github/?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=AI+Development-news",
+			"published_at": "Wed, 27 May 2026 06:23:00 GMT",
+			"summary": "Pullfrog is an open-source AI-powered GitHub bot by Colin McDonnell, designed for automation in GitHub Actions. It supports a model-agnostic approach, allowing integration with various LLM providers. Key features include orchestration for pull request reviews, issue triage, and CI remediation, all managed within GitHub's environment. The tool operates with a bring-your-own-key model for access. By Daniel Curtis",
+			"backend_focus": "工程实践内容适合沉淀为内部方案，重点补齐迁移、验证和回滚链路。",
+			"meta": {}
+		},
+		{
+			"id": "infoq-3-ai-assisted-migration-tool-helps-teams-move-from",
+			"source_id": "infoq",
+			"source": "InfoQ AI Development",
+			"category": "AI Development",
+			"title": "AI-Assisted Migration Tool Helps Teams Move from ingress-nginx to Higress in Minutes",
+			"url": "https://www.infoq.com/news/2026/05/ai-nginx-higress/?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=Artificial+Intelligence-news",
+			"published_at": "Fri, 29 May 2026 12:00:00 GMT",
+			"summary": "The Cloud Native Computing Foundation has highlighted a new AI-assisted migration approach that enabled engineers to migrate 60 ingress-nginx resources to Higress in roughly 30 minutes, demonstrating how artificial intelligence is increasingly being applied to modernize Kubernetes networking and gateway infrastructure. By Craig Risi",
+			"backend_focus": "工程实践内容适合沉淀为内部方案，重点补齐迁移、验证和回滚链路。",
+			"meta": {}
+		},
+		{
+			"id": "infoq-4-accountability-is-the-goal-for-ai-with-eu-regula",
+			"source_id": "infoq",
+			"source": "InfoQ AI Development",
+			"category": "Products",
+			"title": "Accountability is the Goal for AI, with EU Regulations Supporting Transparency",
+			"url": "https://www.infoq.com/news/2026/05/accountability-AI-EU-regulations/?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=Artificial+Intelligence-news",
+			"published_at": "Thu, 28 May 2026 11:08:00 GMT",
+			"summary": "AI bias mirrors human bias; both stem from our language and lived experiences. Ethics and AI are inseparable, but AI changes affordances, making harmful actions easier to carry out. The EU regulations apply to AI, since digital products are products. The ultimate goal is accountability: companies must ensure transparency, and laws should favor using the simplest AI that gets the job done. By Ben Linders",
+			"backend_focus": "工程实践内容适合沉淀为内部方案，重点补齐迁移、验证和回滚链路。",
+			"meta": {}
+		},
+		{
+			"id": "infoq-5-sarang-kulkarni-on-lessons-from-building-deep-re",
+			"source_id": "infoq",
+			"source": "InfoQ AI Development",
+			"category": "Generative AI",
+			"title": "Sarang Kulkarni on Lessons from Building Deep Research Agents in Production",
+			"url": "https://www.infoq.com/news/2026/05/kulkarni-deep-research-agents/?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=Artificial+Intelligence-news",
+			"published_at": "Wed, 27 May 2026 07:45:00 GMT",
+			"summary": "Deep Research Agentic Systems are AI Agents designed to conduct multi-step research for complex tasks using dynamic reasoning, multi-hop information retrieval, and generate structured analytical reports. Sarang Kulkarni from Thoughtworks spoke at Arc of AI Conference 2026 on how to deploy multi-agent research systems for deep reasoning, and the lessons learned from developing Deep Research Agents. By Srini Penchikala",
+			"backend_focus": "工程实践内容适合沉淀为内部方案，重点补齐迁移、验证和回滚链路。",
+			"meta": {}
+		},
+		{
+			"id": "infoq-6-google-expands-synthid-adoption-for-ai-watermark",
+			"source_id": "infoq",
+			"source": "InfoQ AI Development",
+			"category": "OpenAI",
+			"title": "Google Expands SynthID Adoption for AI Watermarking, Previews Content Detection API",
+			"url": "https://www.infoq.com/news/2026/05/google-synthid-content-detection/?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=Artificial+Intelligence-news",
+			"published_at": "Tue, 26 May 2026 09:00:00 GMT",
+			"summary": "Google's SynthID, designed to embed imperceptible signals into AI-generated content, is adding a new Content Detection API on Google Cloud's Gemini Enterprise Agent Platform, after gaining adoption by several industry players including Nvidia and OpenAI. By Sergio De Simone",
+			"backend_focus": "工程实践内容适合沉淀为内部方案，重点补齐迁移、验证和回滚链路。",
+			"meta": {}
+		},
+		{
+			"id": "infoq-7-google-introduces-middleware-architecture-for-ge",
+			"source_id": "infoq",
+			"source": "InfoQ AI Development",
+			"category": "Artificial Intelligence",
+			"title": "Google Introduces Middleware Architecture for Genkit Applications",
+			"url": "https://www.infoq.com/news/2026/05/google-genkit-middleware/?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=Artificial+Intelligence-news",
+			"published_at": "Sun, 24 May 2026 17:55:00 GMT",
+			"summary": "Google has introduced Middleware for Genkit, its open-source framework for building AI-powered and agentic applications. The update adds a programmable interception layer around model calls, tool execution, and generation loops, giving developers more control over reliability, safety, and orchestration inside production AI systems. By Robert Krzaczyński",
+			"backend_focus": "工程实践内容适合沉淀为内部方案，重点补齐迁移、验证和回滚链路。",
+			"meta": {}
+		},
+		{
+			"id": "infoq-8-infoq-launches-online-ai-engineering-cohort-and-",
+			"source_id": "infoq",
+			"source": "InfoQ AI Development",
+			"category": "InfoQ Certification Program",
+			"title": "InfoQ Launches Online AI Engineering Cohort and Certification for Senior Software Practitioners",
+			"url": "https://www.infoq.com/news/2026/05/ai-engineering-certification-pro/?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=Artificial+Intelligence-news",
+			"published_at": "Fri, 22 May 2026 13:00:00 GMT",
+			"summary": "InfoQ has launched a five-week online AI Engineering certification for senior practitioners working on production AI systems, covering RAG, agents, AI platforms, evals, reliability, and operational trade-offs. By Artenisa Chatziou",
+			"backend_focus": "工程实践内容适合沉淀为内部方案，重点补齐迁移、验证和回滚链路。",
+			"meta": {}
+		},
+		{
+			"id": "infoq-9-xai-releases-grok-skills-and-updates-tool-callin",
+			"source_id": "infoq",
+			"source": "InfoQ AI Development",
+			"category": "OpenAI",
+			"title": "xAI Releases Grok Skills and Updates Tool Calling Responses API",
+			"url": "https://www.infoq.com/news/2026/05/xai-grok-skills/?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=Artificial+Intelligence-news",
+			"published_at": "Fri, 22 May 2026 10:24:00 GMT",
+			"summary": "xAI has released Grok Skills together with enhancements to the Responses API for Grok 4.3, enabling persistent custom expertise that the model retains across all conversations. By Daniel Dominguez",
+			"backend_focus": "工程实践内容适合沉淀为内部方案，重点补齐迁移、验证和回滚链路。",
+			"meta": {}
+		},
+		{
+			"id": "infoq-10-article-why-vector-search-alone-isn-t-enough-hyb",
+			"source_id": "infoq",
+			"source": "InfoQ AI Development",
+			"category": "Generative AI",
+			"title": "Article: Why Vector Search Alone Isn't Enough: Hybrid Retrieval for RAG",
+			"url": "https://www.infoq.com/articles/vector-search-hybrid-retrieval-rag/?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=Artificial+Intelligence-articles",
+			"published_at": "Tue, 02 Jun 2026 09:00:00 GMT",
+			"summary": "In this article, author Aaditya Chauhan discusses the limitations of RAG pipelines based purely on vector search and how an internal omni-search application using Reciprocal Rank Fusion (RRF) that combines BM25 and vector results, can enhance the search solution. By Aaditya Chauhan",
+			"backend_focus": "工程实践内容适合沉淀为内部方案，重点补齐迁移、验证和回滚链路。",
+			"meta": {}
+		}
+	]
+}
